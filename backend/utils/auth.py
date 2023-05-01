@@ -2,7 +2,7 @@ import jwt
 from flask import abort, current_app, request
 from functools import wraps
 
-from models import User
+from ..models import User
 
 
 def is_token_valid(token):

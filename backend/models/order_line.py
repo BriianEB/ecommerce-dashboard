@@ -1,4 +1,5 @@
 from database import db
+from utils import validation
 
 
 class OrderLine(db.Model):
@@ -7,10 +8,16 @@ class OrderLine(db.Model):
     id = db.mapped_column(db.Integer, primary_key=True)
     quantity = db.mapped_column(db.Float)
     total = db.mapped_column(db.Float)
-    product_id = db.mapped_column(db.ForeignKey('products.id'))
-    order_id = db.mapped_column(db.ForeignKey('orders.id'))
-    product = db.relationship('Product', back_populates='order_lines')
+    order_id = db.mapped_column(db.Integer, db.ForeignKey('orders.id', ondelete='CASCADE'))
+    product_id = db.mapped_column(db.Integer, db.ForeignKey('products.id', ondelete='CASCADE'))    
     order = db.relationship('Order', back_populates='order_lines')
+    product = db.relationship('Product', back_populates='order_lines')
+
+    validations = {
+        'quantity': [validation.required()],
+        'total': [validation.required()],
+        'product': [validation.required()]        
+    }
 
     def to_dict(self):
         return {

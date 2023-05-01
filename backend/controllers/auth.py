@@ -1,6 +1,7 @@
-from flask import Blueprint, request, abort
+from flask import Blueprint, request
 
-from db import db
+from database import db
+from exceptions import ValidationError
 from models import User
 
 
@@ -13,10 +14,9 @@ def sign_up():
     email = data['email']
     password = data['password']
 
-    user = db.session.execute(db.select(User).filter_by(email='asd@asd.com')).scalar()
-
+    user = db.session.scalar(db.select(User).filter_by(email=email))
     if user is not None:
-        abort(422, description='Email exists already')
+        raise ValidationError({'fields': {'email': 'Email exists already.'}})
 
     user = User(
         email=email,
@@ -40,13 +40,10 @@ def login():
     email = data['email']
     password = data['password']
 
-    try:
-        user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one()
-    except:
-        abort(422, description='Invalid credentials')
+    user = db.session.scalar(db.select(User).filter_by(email=email))    
 
     if not user.verify_password(password):
-        abort(422, description='Invalid credentials')
+        raise ValidationError({'error': 'Invalid credentials.'})
 
     auth_token = user.generate_auth_token()
 
