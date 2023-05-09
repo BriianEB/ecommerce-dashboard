@@ -1,16 +1,23 @@
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
+import { Routes, Route } from 'react-router-dom';
+
+import ThemeProvider from './theme';
+
+import Layout from 'shared/components/Layout';
+import Dashboard from 'dashboard/Dashboard';
+import Orders from 'Orders';
 
 
 function App() {
-  return (
-    <>
-      <CssBaseline />
-      <div>
-        <Button>hi</Button>
-      </div>
-    </>
-  );
+    return (
+        <ThemeProvider>
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="orders/*" element={<Orders />} />
+                </Route>
+            </Routes>
+        </ThemeProvider>
+    );
 }
 
 export default App;
