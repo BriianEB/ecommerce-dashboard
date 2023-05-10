@@ -1,5 +1,5 @@
-import { Avatar, Box, Stack } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import { Avatar, Box, IconButton, Stack } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -16,7 +16,8 @@ function Header({ onOpenSideNav }) {
                 justifyContent: 'space-between',
                 height: '70px',
                 pl: 2,
-                pr: 2
+                pr: 2,
+                boxShadow: (theme) => `0 0 25px 0 ${alpha(theme.palette.grey[500], 0.15)}`
             }}
         >
             <Box>

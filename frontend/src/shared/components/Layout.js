@@ -36,7 +36,7 @@ function Layout() {
                     ml: '260px'
                 }}
             >
-                <Container>
+                <Container maxWidth="false">
                     <Outlet />
                 </Container>
             </Box>

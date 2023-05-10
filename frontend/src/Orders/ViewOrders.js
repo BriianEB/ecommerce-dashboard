@@ -1,45 +1,32 @@
-import { Box, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 
 import Breadcrumbs from 'shared/components/Breadcrumbs';
+import DataTable from 'shared/components/DataTable';
 
 
 function ViewOrders() {
     return (
         <Box>
-            <Breadcrumbs
-                links={[
-                    { name: 'Dashboard', path: '/' },
-                    { name: 'Orders', path: '/orders' }
-                ]}
-                heading="Orders"
-            />
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    my: 3
+                }}
+            >
+                <Typography variant="h6">Orders</Typography>
+                <Breadcrumbs
+                    links={[
+                        { name: 'Dashboard', path: '/' },
+                        { name: 'Orders', path: '/orders' }
+                    ]}
+                />
+            </Box>
 
             <Box>
-                <Card sx={{p: 5}}>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Head 1</TableCell>
-                                <TableCell>Head 2</TableCell>
-                                <TableCell>Head 3</TableCell>
-                                <TableCell>Head 4</TableCell>
-                                <TableCell>Head 5</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {[1, 2, 3, 4, 5].map(row => (
-                                <TableRow key={row}>
-                                    <TableCell>Data {row}-1</TableCell>
-                                    <TableCell>Data {row}-2</TableCell>
-                                    <TableCell>Data {row}-3</TableCell>
-                                    <TableCell>Data {row}-4</TableCell>
-                                    <TableCell>Data {row}-5</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <Card sx={{p: 1.5 }}>
+                    <DataTable />
                 </Card>
             </Box>
         </Box>        

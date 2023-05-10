@@ -1,27 +1,23 @@
 import { Box, Breadcrumbs as MUIBreadCrumbs, Link, Typography } from '@mui/material';
 
 
-function Breadcrumbs({ links, heading }) {
+function Breadcrumbs({ links }) {
+    const currentLink = links[links.length - 1].name;
+
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                my: 2.5
-            }}
-        >
-            <Typography variant="h6">{heading}</Typography>
-            <Box>
-                <MUIBreadCrumbs separator={<BreadcrumbsSeparator />}>
-                    {links.map(link => (
+        <MUIBreadCrumbs separator={<BreadcrumbsSeparator />} sx={{m:0}}>
+            {links.map(link => (
+                <div key={link.name}>
+                    {link.name !== currentLink ? (
                         <Link key={link.path} href={link.path}>
-                            {link.name}
+                            <Typography variant="body2">{link.name}</Typography>
                         </Link>
-                    ))}                    
-                </MUIBreadCrumbs>
-            </Box>
-        </Box>
+                    ) : (
+                        <Typography variant="body2">{link.name}</Typography>
+                    )}
+                </div>
+            ))}                    
+        </MUIBreadCrumbs>
     );
 }
 
@@ -32,6 +28,7 @@ function BreadcrumbsSeparator() {
             sx={{
                 width: 4,
                 height: 4,
+                mx: 1,
                 borderRadius: '50%',
                 bgcolor: 'text.disabled'
             }}
