@@ -30,9 +30,9 @@ const palette = {
         dark: '#006F93'
     },
     menu: {
-        bg: '#282C34',
-        item: '#9DA5B4',
-        itemHover: '#d7dae0'
+        bg: '#2D3340',
+        item: '#838C9E',
+        itemHover: '#b2bbc8'
     },
     grey: GREY,
     background: { default: GREY[200], },

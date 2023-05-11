@@ -7,7 +7,7 @@ import palette from './palette';
 const theme = createTheme({
     components: components,
     palette: palette,
-    shape: { borderRadius: 3 }
+    shape: { borderRadius: 4 }
 });
 
 function ThemeProvider({ children }) {
