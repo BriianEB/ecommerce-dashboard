@@ -8,11 +8,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 
 import TableToolbar from './TableToolbar';
 import TableHead from './TableHead';
+import TableMoreMenu from './TableMoreMenu';
 
 
 function createData(name, calories, fat, carbs, protein) {
@@ -82,7 +81,6 @@ function DataTable() {
     const [orderBy, setOrderBy] = useState('calories');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
-    const [dense, setDense] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
   
     const handleRequestSort = (event, property) => {
@@ -131,10 +129,6 @@ function DataTable() {
         setPage(0);
     };
   
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked);
-    };
-  
     const isSelected = (name) => selected.indexOf(name) !== -1;
   
     // Avoid a layout jump when reaching the last page with empty rows.
@@ -150,13 +144,12 @@ function DataTable() {
     );
   
     return (
-        <Box sx={{ width: '100%' }}>
-            <TableToolbar numSelected={selected.length} />
+        <Box sx={{ width: '100%', p: 1.5 }}>
+            {/*<TableToolbar numSelected={selected.length} />*/}
             <TableContainer>
                 <Table
                     sx={{ minWidth: 750 }}
                     aria-labelledby="tableTitle"
-                    size={dense ? 'small' : 'medium'}
                 >
                     <TableHead
                         numSelected={selected.length}
@@ -173,19 +166,19 @@ function DataTable() {
         
                             return (
                                 <TableRow
-                                    hover
-                                    onClick={(event) => handleClick(event, row.name)}
+                                    hover                                    
                                     role="checkbox"
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
                                     key={row.name}
                                     selected={isItemSelected}
-                                    sx={{ cursor: 'pointer' }}
                                 >
                                     <TableCell padding="checkbox">
                                         <Checkbox
                                             color="primary"
+                                            size="small"
                                             checked={isItemSelected}
+                                            onClick={(event) => handleClick(event, row.name)}
                                             inputProps={{
                                                 'aria-labelledby': labelId,
                                             }}
@@ -195,7 +188,6 @@ function DataTable() {
                                         component="th"
                                         id={labelId}
                                         scope="row"
-                                        padding="none"
                                     >
                                         {row.name}
                                     </TableCell>
@@ -203,13 +195,14 @@ function DataTable() {
                                     <TableCell align="right">{row.fat}</TableCell>
                                     <TableCell align="right">{row.carbs}</TableCell>
                                     <TableCell align="right">{row.protein}</TableCell>
+                                    <TableCell align="right" sx={{ py: 0 }}><TableMoreMenu /></TableCell>
                                 </TableRow>
                             );
                         })}
                         {emptyRows > 0 && (
                             <TableRow
                                 style={{
-                                height: (dense ? 33 : 53) * emptyRows,
+                                height: 53 * emptyRows,
                                 }}
                             >
                                 <TableCell colSpan={6} />
@@ -226,10 +219,6 @@ function DataTable() {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
             />
         </Box>
     );

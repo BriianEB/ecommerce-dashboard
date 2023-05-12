@@ -7,7 +7,13 @@ import palette from './palette';
 const theme = createTheme({
     components: components,
     palette: palette,
-    shape: { borderRadius: 4 }
+    shape: { borderRadius: 4 },
+    typography: {
+        body3: {
+            fontSize: '0.82rem',
+            fontWeight: 400
+        }
+    }
 });
 
 function ThemeProvider({ children }) {

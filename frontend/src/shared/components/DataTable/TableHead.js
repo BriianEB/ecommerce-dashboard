@@ -1,12 +1,14 @@
 import { Box, Checkbox, TableCell, TableHead as MUITableHead, TableRow, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 
 const headCells = [
     {
       id: 'name',
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       label: 'Dessert (100g serving)',
     },
     {
@@ -48,12 +50,13 @@ function TableHead(props) {
                 <TableCell padding="checkbox">
                     <Checkbox
                         color="primary"
+                        size="small"
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
                         inputProps={{
-                            'aria-label': 'select all desserts',
-                        }}
+                            'aria-label': 'select all',
+                        }}                        
                     />
                 </TableCell>
                 {headCells.map((headCell) => (
@@ -62,11 +65,15 @@ function TableHead(props) {
                         align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
+                        sx={{
+                            bgcolor: (theme) => orderBy === headCell.id ? theme.palette.grey[300] : ''
+                        }}
                     >
                         <TableSortLabel
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
+                            IconComponent={KeyboardArrowDownIcon}
                         >
                             {headCell.label}
                             {orderBy === headCell.id ? (
@@ -77,6 +84,7 @@ function TableHead(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
+                <TableCell></TableCell>
             </TableRow>
         </MUITableHead>
     );

@@ -9,9 +9,6 @@ function NavItem({ text, Icon, path }) {
         <ListItemButton
             sx={{
                 color: 'menu.item',
-                '&:hover': {
-                    color: 'menu.itemHover'
-                }
             }}
             href={path}
             style={({ isActive }) => ({
