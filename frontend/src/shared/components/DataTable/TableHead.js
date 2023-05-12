@@ -41,6 +41,8 @@ function TableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     
     const createSortHandler = (property) => (event) => {
+        console.log(property);
+        console.log(event);
         onRequestSort(event, property);
     };
   

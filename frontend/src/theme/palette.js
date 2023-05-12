@@ -9,6 +9,7 @@ const GREY = {
     300: '#DFE3E8',
     400: '#C4CDD5',
     500: '#919EAB',
+    550: '#758593',
     600: '#637381',
     700: '#454F5B',
     800: '#212B36',
@@ -30,10 +31,13 @@ const palette = {
         main: '#008CBA',
         dark: '#006F93'
     },
+    secondary: {
+        main: GREY[550]
+    },
     menu: {
         bg: '#2D3340',
         item: '#838C9E',
-        itemHover: '#b2bbc8'
+        itemHover: '#B2BBC8'
     },
     grey: GREY,
     background: { default: GREY[200], },

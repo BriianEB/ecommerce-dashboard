@@ -5,40 +5,15 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
+import Pagination from '@mui/material/Pagination';
+import { Typography } from '@mui/material';
 
-import TableToolbar from './TableToolbar';
+//import TableToolbar from './TableToolbar';
 import TableHead from './TableHead';
 import TableMoreMenu from './TableMoreMenu';
 
-
-function createData(name, calories, fat, carbs, protein) {
-    return {
-      name,
-      calories,
-      fat,
-      carbs,
-      protein,
-    };
-  }
-  
-  const rows = [
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Donut', 452, 25.0, 51, 4.9),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Honeycomb', 408, 3.2, 87, 6.5),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0),
-    createData('KitKat', 518, 26.0, 65, 7.0),
-    createData('Lollipop', 392, 0.2, 98, 0.0),
-    createData('Marshmallow', 318, 0, 81, 2.0),
-    createData('Nougat', 360, 19.0, 9, 37.0),
-    createData('Oreo', 437, 18.0, 63, 4.0),
-  ];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -76,20 +51,20 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-function DataTable() {
+function DataTable({ rows, rowsPerPage }) {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [selected, setSelected] = useState([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [page, setPage] = useState(1);
   
-    const handleRequestSort = (event, property) => {
+    function handleRequestSort(event, property) {
         const isAsc = orderBy === property && order === 'asc';
+
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
-    };
+    }
   
-    const handleSelectAllClick = (event) => {
+    function handleSelectAllClick(event) {
         if (event.target.checked) {
             const newSelected = rows.map((n) => n.name);
             setSelected(newSelected);
@@ -98,9 +73,9 @@ function DataTable() {
         }
 
         setSelected([]);
-    };
+    }
   
-    const handleClick = (event, name) => {
+    function handleClick(event, name) {
         const selectedIndex = selected.indexOf(name);
         let newSelected = [];
   
@@ -118,30 +93,38 @@ function DataTable() {
         }
   
         setSelected(newSelected);
-    };
-  
-    const handleChangePage = (event, newPage) => {
+    }
+
+    function handleChangePage(event, newPage) {
         setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+    }
+
+    function pageResultsMessage() {
+        const rowsPage = page - 1;
+        const start = rowsPage * rowsPerPage + 1;
+        var end = rowsPage * rowsPerPage + rowsPerPage;
+        end = (end > rows.length) ? rows.length : end;
+        
+        return `Showing results ${start} to ${end} of ${rows.length}`
+    }
   
     const isSelected = (name) => selected.indexOf(name) !== -1;
   
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    // "Filas fantasma" a agregar para evitar un cambio de layout al 
+    // llegar a la última página. La idea es que la tabla siempre tenga
+    // el mismo alto sin importar el número de filas que esté mostrando.
+    const emptyRows = page > 0 ? Math.max(0, page * rowsPerPage - rows.length) : 0;
   
-    const visibleRows = useMemo(
-      () =>
-        stableSort(rows, getComparator(order, orderBy)).slice(
-          page * rowsPerPage,
-          page * rowsPerPage + rowsPerPage,
-        ),
-      [order, orderBy, page, rowsPerPage],
-    );
+    const visibleRows = useMemo(function () {
+        // El número de página empieza en 1, pero el array de filas en 0, por lo que
+        // al hacer el cálculo de la página, hay que empezar contando desde 0.
+        const rowsPage = page - 1;
+
+        return stableSort(rows, getComparator(order, orderBy)).slice(
+            rowsPage * rowsPerPage,
+            rowsPage * rowsPerPage + rowsPerPage,
+        );
+    }, [order, orderBy, page, rows, rowsPerPage]);
   
     return (
         <Box sx={{ width: '100%', p: 1.5 }}>
@@ -205,21 +188,29 @@ function DataTable() {
                                 height: 53 * emptyRows,
                                 }}
                             >
-                                <TableCell colSpan={6} />
+                                <TableCell colSpan={7} />
                             </TableRow>
                         )}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    pt: 3
+                }}
+            >
+                <Typography variant="body2">
+                    {pageResultsMessage()}
+                </Typography>
+                <Pagination
+                    count={Math.ceil(rows.length / rowsPerPage)}
+                    color="primary"
+                    page={page}
+                    onChange={handleChangePage}                    
+                />
+            </Box>            
         </Box>
     );
 }
