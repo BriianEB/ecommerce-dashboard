@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Pagination from '@mui/material/Pagination';
 import { Typography } from '@mui/material';
 
+import useDeepMemo from 'shared/hooks/useDeepMemo';
 //import TableToolbar from './TableToolbar';
 import TableHead from './TableHead';
 import TableMoreMenu from './TableMoreMenu';
@@ -51,11 +52,14 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-function DataTable({ rows, rowsPerPage }) {
+function DataTable({ columns, rows, rowsPerPage, filter }) {
     const [order, setOrder] = useState('asc');
-    const [orderBy, setOrderBy] = useState('calories');
+    const [orderBy, setOrderBy] = useState(null);
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(1);
+
+    const memoFilter = useDeepMemo(filter);
+    const isFiltering = memoFilter !== undefined;
   
     function handleRequestSort(event, property) {
         const isAsc = orderBy === property && order === 'asc';
@@ -100,15 +104,19 @@ function DataTable({ rows, rowsPerPage }) {
     }
 
     function pageResultsMessage() {
+        const currentRowsLength = (isFiltering) ? visibleRows.length : rows.length;
+
         const rowsPage = page - 1;
         const start = rowsPage * rowsPerPage + 1;
         var end = rowsPage * rowsPerPage + rowsPerPage;
-        end = (end > rows.length) ? rows.length : end;
+        end = (end > currentRowsLength) ? currentRowsLength : end;
         
-        return `Showing results ${start} to ${end} of ${rows.length}`
+        return `Showing results ${start} to ${end} of ${currentRowsLength}`
     }
   
-    const isSelected = (name) => selected.indexOf(name) !== -1;
+    function isSelected(name) {
+        return selected.indexOf(name) !== -1;
+    }
   
     // "Filas fantasma" a agregar para evitar un cambio de layout al 
     // llegar a la última página. La idea es que la tabla siempre tenga
@@ -116,15 +124,32 @@ function DataTable({ rows, rowsPerPage }) {
     const emptyRows = page > 0 ? Math.max(0, page * rowsPerPage - rows.length) : 0;
   
     const visibleRows = useMemo(function () {
-        // El número de página empieza en 1, pero el array de filas en 0, por lo que
-        // al hacer el cálculo de la página, hay que empezar contando desde 0.
+        // El número de página empieza en 1, pero el array de filas en 0, por lo
+        // que al hacer el cálculo de la página, hay que empezar contando desde 0.
         const rowsPage = page - 1;
+        
+        var filteredRows = rows;
 
-        return stableSort(rows, getComparator(order, orderBy)).slice(
+        if (isFiltering) {
+            filteredRows = rows.filter(function (row) {
+                if (isNaN(row[memoFilter.field])) {
+                    return row[memoFilter.field].toLowerCase()
+                        .includes(memoFilter.value.toLowerCase());
+                } else {
+                    return row[memoFilter.field] === Number(memoFilter.value);
+                }
+            });
+        }        
+
+        return stableSort(filteredRows, getComparator(order, orderBy)).slice(
             rowsPage * rowsPerPage,
             rowsPage * rowsPerPage + rowsPerPage,
         );
-    }, [order, orderBy, page, rows, rowsPerPage]);
+    }, [order, orderBy, page, rows, rowsPerPage, memoFilter, isFiltering]);
+
+    const numPages = (isFiltering) 
+        ? Math.ceil(visibleRows.length / rowsPerPage)
+        : Math.ceil(rows.length / rowsPerPage);
   
     return (
         <Box sx={{ width: '100%', p: 1.5 }}>
@@ -135,6 +160,7 @@ function DataTable({ rows, rowsPerPage }) {
                     aria-labelledby="tableTitle"
                 >
                     <TableHead
+                        columns={columns}
                         numSelected={selected.length}
                         order={order}
                         orderBy={orderBy}
@@ -201,11 +227,14 @@ function DataTable({ rows, rowsPerPage }) {
                     pt: 3
                 }}
             >
-                <Typography variant="body2">
+                <Typography
+                    variant="body2"
+                    sx={{ display: 'flex', alignItems: 'center' }}
+                >
                     {pageResultsMessage()}
                 </Typography>
                 <Pagination
-                    count={Math.ceil(rows.length / rowsPerPage)}
+                    count={numPages}
                     color="primary"
                     page={page}
                     onChange={handleChangePage}                    

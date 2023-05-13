@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { Box, Button, Card, Typography } from '@mui/material';
 
 import Breadcrumbs from 'shared/components/Breadcrumbs';
-import DataTable from 'shared/components/DataTable';
-import TableFilter from 'shared/components/DataTable/TableFilter';
-import TableExport from 'shared/components/DataTable/TableExport';
-import TableSearch from 'shared/components/DataTable/TableSearch';
+import DataTable from 'shared/components/Table/DataTable';
+import TableFilter from 'shared/components/Table/TableFilter';
+import TableExport from 'shared/components/Table/TableExport';
+import TableSearch from 'shared/components/Table/TableSearch';
 
 import AddIcon from '@mui/icons-material/Add';
 
@@ -16,7 +17,40 @@ function createData(name, calories, fat, carbs, protein) {
       carbs,
       protein,
     };
-  }
+}
+
+const columns = [
+    {
+      id: 'name',
+      numeric: false,
+      disablePadding: false,
+      label: 'Dessert (100g serving)',
+    },
+    {
+      id: 'calories',
+      numeric: true,
+      disablePadding: false,
+      label: 'Calories',
+    },
+    {
+      id: 'fat',
+      numeric: true,
+      disablePadding: false,
+      label: 'Fat (g)',
+    },
+    {
+      id: 'carbs',
+      numeric: true,
+      disablePadding: false,
+      label: 'Carbs (g)',
+    },
+    {
+      id: 'protein',
+      numeric: true,
+      disablePadding: false,
+      label: 'Protein (g)',
+    },
+];
   
   const rows = [
     createData('Cupcake', 305, 3.7, 67, 4.3),
@@ -35,6 +69,12 @@ function createData(name, calories, fat, carbs, protein) {
   ];
 
 function ViewOrders() {
+    const [filter, setFilter] = useState();
+
+    function handleSearch(term) {
+        setFilter(term);
+    }
+
     return (
         <Box>
             <Box
@@ -70,7 +110,14 @@ function ViewOrders() {
                             </Button>
                         </Box>
                         <Box sx={{ width: '300px' }}>
-                            <TableSearch />
+                            <TableSearch
+                                fields={[
+                                    'name',
+                                    'calories',
+                                    'fat'
+                                ]}
+                                onSelect={handleSearch}
+                            />
                             <Box sx={{ px: 1, py: 2 }}>
                                 <TableFilter />
                                 <TableExport />
@@ -78,8 +125,10 @@ function ViewOrders() {
                         </Box>
                     </Box>
                     <DataTable
+                        columns={columns}
                         rows={rows}
                         rowsPerPage={5}
+                        filter={filter}
                     />
                 </Card>
             </Box>
