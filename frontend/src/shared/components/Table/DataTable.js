@@ -193,18 +193,17 @@ function DataTable({ columns, rows, rowsPerPage, filter }) {
                                             }}
                                         />
                                     </TableCell>
-                                    <TableCell
-                                        component="th"
-                                        id={labelId}
-                                        scope="row"
-                                    >
-                                        {row.name}
+                                    {columns.map((column) => (
+                                        <TableCell
+                                            key={column.id}
+                                            align={column.numeric ? 'right' : undefined}
+                                        >
+                                            {row[column.id]}
+                                        </TableCell>
+                                    ))}                                    
+                                    <TableCell align="right" sx={{ py: 0 }}>
+                                        <TableMoreMenu />
                                     </TableCell>
-                                    <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
-                                    <TableCell align="right">{row.carbs}</TableCell>
-                                    <TableCell align="right">{row.protein}</TableCell>
-                                    <TableCell align="right" sx={{ py: 0 }}><TableMoreMenu /></TableCell>
                                 </TableRow>
                             );
                         })}

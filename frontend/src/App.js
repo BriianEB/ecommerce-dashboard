@@ -5,6 +5,7 @@ import ThemeProvider from './theme';
 import Layout from 'shared/components/Layout';
 import Dashboard from 'dashboard/Dashboard';
 import Orders from 'Orders';
+import Products from 'Products';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Dashboard />} />
                     <Route path="orders/*" element={<Orders />} />
+                    <Route path="products/*" element={<Products />} />
                 </Route>
             </Routes>
         </ThemeProvider>
