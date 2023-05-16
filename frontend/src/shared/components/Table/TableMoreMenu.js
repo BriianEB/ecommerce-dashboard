@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { IconButton, MenuItem, Popover, Typography } from '@mui/material';
-
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { IconButton, Popover } from '@mui/material';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
-function TableMoreMenu({ onClose, onEdit, onDelete }) {
+function TableMoreMenu({ row, actions }) {
     const [anchorEl, setAnchorEl] = useState(null);
 
     function handleClick(event) {
@@ -45,14 +42,7 @@ function TableMoreMenu({ onClose, onEdit, onDelete }) {
                     }
                 }}
             >
-                <MenuItem onClick={onEdit}>
-                    <EditIcon fontSize="small" />
-                    <Typography variant="body2">Edit</Typography>
-                </MenuItem>
-                <MenuItem onClick={onDelete}>
-                    <DeleteIcon fontSize="small" />
-                    <Typography variant="body2">Delete</Typography>
-                </MenuItem>
+                {actions(row)}
             </Popover>
         </>
     );

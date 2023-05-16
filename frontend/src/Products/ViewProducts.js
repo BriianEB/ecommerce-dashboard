@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Card, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, Button, Card, MenuItem, Typography } from '@mui/material';
 
 import useApi from 'shared/hooks/useApi';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
@@ -7,8 +8,10 @@ import DataTable from 'shared/components/Table/DataTable';
 import TableFilter from 'shared/components/Table/TableFilter';
 import TableExport from 'shared/components/Table/TableExport';
 import TableSearch from 'shared/components/Table/TableSearch';
+import DeleteRowAction from 'shared/components/Table/DeleteRowAction';
 
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 const columns = [
@@ -32,6 +35,8 @@ const columns = [
 function ViewProducts() {
     const [filter, setFilter] = useState();
 
+    const navigate = useNavigate();
+
     const [getProducts, reqStatus, products, reqErrors] = useApi.get('/products');
 
     useEffect(function () {
@@ -48,6 +53,16 @@ function ViewProducts() {
 
     if (reqErrors) {
         console.log(reqErrors);
+    }
+
+    function onEditRow(row) {
+        navigate(`${row.id}/edit`);
+    }
+
+    function handleDelete(response, row) {
+        console.log(response);
+        console.log(row);
+        getProducts();
     }
 
     return (
@@ -101,8 +116,22 @@ function ViewProducts() {
                     <DataTable
                         columns={columns}
                         rows={products}
-                        rowsPerPage={5}
                         filter={filter}
+                        actions={(row) => (
+                            <>
+                                <MenuItem onClick={() => onEditRow(row)}>
+                                    <EditIcon fontSize="small" />
+                                    <Typography variant="body2">Edit</Typography>
+                                </MenuItem>
+                                <DeleteRowAction
+                                    apiUri={`/products/${row.id}`}
+                                    rowName={row.name}
+                                    onDelete={
+                                        (response) => handleDelete(response, row)
+                                    }
+                                />
+                            </>
+                        )}
                     />
                 </Card>
             </Box>

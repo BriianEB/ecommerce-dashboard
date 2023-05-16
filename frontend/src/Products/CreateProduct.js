@@ -15,7 +15,7 @@ function CreateProduct() {
         if (reqStatus === 'completed') {
             navigate('/products');
         }
-    }, [reqStatus, navigate, product]);
+    }, [reqStatus, navigate]);
 
     if (reqErrors) {
         console.log(reqErrors);

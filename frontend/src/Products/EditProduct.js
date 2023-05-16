@@ -10,22 +10,35 @@ import ProductForm from './ProductForm';
 function EditProduct() {
     const navigate = useNavigate();
     const params = useParams();
-    const [editProduct, reqStatus, product, reqErrors] = useApi.patch('/products/');
-
     const productId = params.id;
+    
+    const [getProduct, getStatus, product, getErrors] = useApi.get(`/products/${productId}`);
+    const [patchProduct, patchStatus, updatedProduct, patchErrors] = useApi.patch(`/products/${productId}`);
 
     useEffect(function () {
-        if (reqStatus === 'completed') {
+        getProduct();
+    }, [getProduct]);
+
+    useEffect(function () {
+        if (patchStatus === 'completed') {
             navigate('/products');
         }
-    }, [reqStatus, navigate, product]);
+    }, [patchStatus, navigate]);
 
-    if (reqErrors) {
-        console.log(reqErrors);
+    if (getErrors) {
+        console.log(getErrors);
+    }
+
+    if (patchErrors) {
+        console.log(patchErrors);
     }
 
     function handleSubmit(data) {
-        editProduct(data);
+        patchProduct(data);
+    }
+
+    if (getStatus !== 'completed') {
+        return null;
     }
     
     return (
@@ -38,12 +51,12 @@ function EditProduct() {
                     my: 3
                 }}
             >
-                <Typography variant="h6">Create Product</Typography>
+                <Typography variant="h6">Edit Product</Typography>
                 <Breadcrumbs
                     links={[
                         { name: 'Dashboard', path: '/' },
                         { name: 'Products', path: '/products' },
-                        { name: 'Edit Product', path: '/products/create' }
+                        { name: 'Edit Product', path: `/products/${product.id}/edit` }
                     ]}
                 />
             </Box>
@@ -59,7 +72,7 @@ function EditProduct() {
                         width: '50%'
                     }}
                 >
-                    <ProductForm onSubmit={handleSubmit} />
+                    <ProductForm onSubmit={handleSubmit} product={product} />
                 </Card>
             </Box>
         </Box>

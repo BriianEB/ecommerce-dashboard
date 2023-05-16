@@ -4,8 +4,7 @@ import { visuallyHidden } from '@mui/utils';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
-function TableHead(props) {
-    const { columns, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+function TableHead({ columns, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort }) {
 
     function handleCreateSort(event, property) {
         onRequestSort(event, property);
@@ -51,7 +50,7 @@ function TableHead(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                <TableCell></TableCell>
+                <TableCell align="right"></TableCell>
             </TableRow>
         </MUITableHead>
     );

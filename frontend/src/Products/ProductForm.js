@@ -23,8 +23,8 @@ const validations = {
 function ProductForm({ onSubmit, product }) {
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            name: '',
-            price: ''
+            name: product ? product.name : '',
+            price: product ? product.price : ''
         }
     });    
 
@@ -45,7 +45,6 @@ function ProductForm({ onSubmit, product }) {
                             {...field}
                             error={errors.name !== undefined}
                             helperText={errors.name && errors.name.message}
-                            value={product && product.name}
                         />
                     )}
                 />
@@ -61,7 +60,6 @@ function ProductForm({ onSubmit, product }) {
                             {...field}
                             error={errors.price !== undefined}
                             helperText={errors.price && errors.price.message}
-                            value={product && product.price}
                         />
                     )}
                 />                
@@ -84,7 +82,7 @@ function ProductForm({ onSubmit, product }) {
                     <Typography variant="body">Cancel</Typography>
                 </Button>
                 <Button type="submit" variant="contained">
-                    <Typography variant="body">Add Product</Typography>
+                    <Typography variant="body">Save</Typography>
                 </Button>
             </Box>
         </form>

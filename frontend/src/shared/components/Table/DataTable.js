@@ -14,6 +14,7 @@ import useDeepMemo from 'shared/hooks/useDeepMemo';
 //import TableToolbar from './TableToolbar';
 import TableHead from './TableHead';
 import TableMoreMenu from './TableMoreMenu';
+import TableRowsPerPage from './TableRowsPerPage';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -52,11 +53,29 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-function DataTable({ columns, rows, rowsPerPage, filter }) {
+/**
+ * DataTable acepta dos parámetros clave adicionales a las predecibles 
+ * filas y columnas:
+ *  
+ * filter: Para filtrar los registros mostrados en la tabla en base a
+ * un término (ej: un nombre, una fecha). Ideal para integrar una barra 
+ * de búsqueda u opciones de filtros pre-establecidos y/o personalizados.
+ * Es un objeto con dos parámetros: 1) field: la columna a filtrar;
+ * 2) value: el valor por el qué filtrar.
+ * 
+ * actions: Acciones a realizar sobre el registro. Se muestran en un 
+ * popover de opciones en la última columna de la fila. Lo más común es
+ * agregar acciones para ver, editar o eliminar el registro.
+ * actions es una función que recibe como parámetro la fila y devuelve
+ * el jsx a mostrar en el popover. La idea es que las acciones sobre
+ * la fila puedan ser controladas desde fuera de la tabla.
+ */
+function DataTable({ columns, rows, filter, actions }) {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState(null);
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const memoFilter = useDeepMemo(filter);
     const isFiltering = memoFilter !== undefined;
@@ -103,6 +122,15 @@ function DataTable({ columns, rows, rowsPerPage, filter }) {
         setPage(newPage);
     }
 
+    function handleChangeRowsPerPage(value) {
+        const rowsPerPage = parseInt(value, 10);
+
+        if (!isNaN(rowsPerPage) && rowsPerPage > 0) {
+            setRowsPerPage(rowsPerPage);
+            setPage(1);
+        }        
+    }
+
     function pageResultsMessage() {
         const currentRowsLength = (isFiltering) ? visibleRows.length : rows.length;
 
@@ -146,10 +174,6 @@ function DataTable({ columns, rows, rowsPerPage, filter }) {
             rowsPage * rowsPerPage + rowsPerPage,
         );
     }, [order, orderBy, page, rows, rowsPerPage, memoFilter, isFiltering]);
-
-    const numPages = (isFiltering) 
-        ? Math.ceil(visibleRows.length / rowsPerPage)
-        : Math.ceil(rows.length / rowsPerPage);
   
     return (
         <Box sx={{ width: '100%', p: 1.5 }}>
@@ -200,10 +224,12 @@ function DataTable({ columns, rows, rowsPerPage, filter }) {
                                         >
                                             {row[column.id]}
                                         </TableCell>
-                                    ))}                                    
+                                    ))}
                                     <TableCell align="right" sx={{ py: 0 }}>
-                                        <TableMoreMenu />
-                                    </TableCell>
+                                        {actions && (
+                                            <TableMoreMenu row={row} actions={actions} />
+                                        )}    
+                                    </TableCell>                                    
                                 </TableRow>
                             );
                         })}
@@ -213,7 +239,7 @@ function DataTable({ columns, rows, rowsPerPage, filter }) {
                                 height: 53 * emptyRows,
                                 }}
                             >
-                                <TableCell colSpan={7} />
+                                <TableCell colSpan={columns.length + 2} />
                             </TableRow>
                         )}
                     </TableBody>
@@ -232,12 +258,22 @@ function DataTable({ columns, rows, rowsPerPage, filter }) {
                 >
                     {pageResultsMessage()}
                 </Typography>
-                <Pagination
-                    count={numPages}
-                    color="primary"
-                    page={page}
-                    onChange={handleChangePage}                    
-                />
+                <Box sx={{ display: 'flex' }}>
+                    <TableRowsPerPage
+                        rowsCount={visibleRows.length}
+                        onChange={handleChangeRowsPerPage}
+                        defaultValue={rowsPerPage}
+                    />
+                    <Pagination
+                        count={(isFiltering) 
+                            ? Math.ceil(visibleRows.length / rowsPerPage)
+                            : Math.ceil(rows.length / rowsPerPage)
+                        }
+                        color="primary"
+                        page={page}
+                        onChange={handleChangePage}                    
+                    />
+                </Box>
             </Box>            
         </Box>
     );
