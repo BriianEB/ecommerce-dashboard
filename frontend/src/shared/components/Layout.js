@@ -10,11 +10,11 @@ import Header from './Header';
 function Layout() {
     const [openSideNav, setOpenSideNav] = useState(true);
 
-    function onOpenSideNavHandler() {
+    function handleOpenSideNav() {
         setOpenSideNav(true);
     }
 
-    function onCloseSideNavHandler() {
+    function handleCloseSideNav() {
         setOpenSideNav(false);
     }
 
@@ -26,9 +26,9 @@ function Layout() {
             }}
         >
             <Box sx={{ml: '260px'}}>
-                <Header onOpenSideNav={onOpenSideNavHandler} />
+                <Header onOpenSideNav={handleOpenSideNav} />
             </Box>
-            <SideNav isOpen={openSideNav} onCloseSideNav={onCloseSideNavHandler} />
+            <SideNav isOpen={openSideNav} onCloseSideNav={handleCloseSideNav} />
             
             <Box
                 component="main"

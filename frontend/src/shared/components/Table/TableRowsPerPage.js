@@ -3,7 +3,6 @@ import { Box, Input, Typography } from '@mui/material';
 
 
 function TableRowsPerPage({ rowsCount, onChange, defaultValue }) {
-    console.log(rowsCount);
     const [input, setInput] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(defaultValue);
 

@@ -1,21 +1,27 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Box, Card, Typography } from '@mui/material';
 
 import useApi from 'shared/hooks/useApi';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import ProductForm from './ProductForm';
+import { notifySuccess } from 'store/notificationSlice';
 
 
 function CreateProduct() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    // eslint-disable-next-line
     const [createProduct, reqStatus, product, reqErrors] = useApi.post('/products');
 
     useEffect(function () {
         if (reqStatus === 'completed') {
+            dispatch(notifySuccess('Product created succesfully'));
             navigate('/products');
         }
-    }, [reqStatus, navigate]);
+    }, [reqStatus, navigate, dispatch]);
 
     if (reqErrors) {
         console.log(reqErrors);

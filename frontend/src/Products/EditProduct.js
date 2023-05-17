@@ -13,6 +13,7 @@ function EditProduct() {
     const productId = params.id;
     
     const [getProduct, getStatus, product, getErrors] = useApi.get(`/products/${productId}`);
+    // eslint-disable-next-line
     const [patchProduct, patchStatus, updatedProduct, patchErrors] = useApi.patch(`/products/${productId}`);
 
     useEffect(function () {

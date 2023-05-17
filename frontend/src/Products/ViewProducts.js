@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Box, Button, Card, MenuItem, Typography } from '@mui/material';
 
 import useApi from 'shared/hooks/useApi';
@@ -9,6 +10,7 @@ import TableFilter from 'shared/components/Table/TableFilter';
 import TableExport from 'shared/components/Table/TableExport';
 import TableSearch from 'shared/components/Table/TableSearch';
 import DeleteRowAction from 'shared/components/Table/DeleteRowAction';
+import { notifySuccess } from 'store/notificationSlice';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,6 +37,7 @@ const columns = [
 function ViewProducts() {
     const [filter, setFilter] = useState();
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [getProducts, reqStatus, products, reqErrors] = useApi.get('/products');
@@ -59,9 +62,8 @@ function ViewProducts() {
         navigate(`${row.id}/edit`);
     }
 
-    function handleDelete(response, row) {
-        console.log(response);
-        console.log(row);
+    function handleDelete(response, row) {        
+        dispatch(notifySuccess('Product deleted succesfully'));
         getProducts();
     }
 

@@ -8,13 +8,13 @@ const validations = {
     name: {
         required: {
             value: true,
-            message: 'You must fill this field'
+            message: 'This field must be filled'
         }
     },
     price: {
         required: {
             value: true,
-            message: 'You must fill this field'
+            message: 'This field must be filled'
         }
     }
 
