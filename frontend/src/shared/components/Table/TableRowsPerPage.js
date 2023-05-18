@@ -49,7 +49,7 @@ function TableRowsPerPage({ rowsCount, onChange, defaultValue }) {
         } else {
             setRowsPerPage(defaultValue);
             onChange(defaultValue);
-        }        
+        }
     }
 
     return (

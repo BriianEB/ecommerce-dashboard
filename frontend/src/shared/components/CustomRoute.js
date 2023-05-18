@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Route } from 'react-router-dom';
-import NProgress from 'nprogress';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { startProgress } from 'store/progressBarSlice';
 
 
-function CustomRoute(props) {
+function CustomRoute({ children }) {
+    const dispatch = useDispatch();
+
     useEffect(function () {
         return (function () {
-            NProgress.start();
+            dispatch(startProgress());
         });
-    }, []);
+    }, [dispatch]);
 
     return (
-        <Route {...props} />
+        children
     );
 }
 

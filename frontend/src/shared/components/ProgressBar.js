@@ -1,31 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import NProgress from 'nprogress';
-import { useTheme } from '@mui/material/styles';
 import { GlobalStyles } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 
 function ProgressBar() {
-    const [progress, setProgress] = useState(false);
-    const [prevLoc, setPrevLoc] = useState('');
-    const location = useLocation();
+    const { progress } = useSelector((state) => state.progressBar);
     const theme = useTheme();
-
-    const path = location.pathname;
-
-    useEffect(function () {
-        setPrevLoc(path);
-        setProgress(true);
-
-        if (path === prevLoc) {
-            setPrevLoc('');
-        }
-
-    }, [path]);
-
-    useEffect(function () {
-        setProgress(false);
-    }, [prevLoc]);
 
     if (progress) {
         NProgress.start();

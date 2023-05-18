@@ -11,6 +11,7 @@ import TableExport from 'shared/components/Table/TableExport';
 import TableSearch from 'shared/components/Table/TableSearch';
 import DeleteRowAction from 'shared/components/Table/DeleteRowAction';
 import { notifySuccess } from 'store/notificationSlice';
+import { finishProgress } from 'store/progressBarSlice';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -45,6 +46,12 @@ function ViewProducts() {
     useEffect(function () {
         getProducts();
     }, [getProducts]);
+
+    useEffect(function () {
+        if (reqStatus === 'completed') {
+            dispatch(finishProgress());
+        }
+    }, [reqStatus, dispatch]);
 
     function handleSearch(term) {
         setFilter(term);
