@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from 'react';
 
 import useDeepMemo from './useDeepMemo';
-import apiRequest from 'utils/apiRequest';
+import apiRequest from 'shared/utils/apiRequest';
 
 
 function apiReducer(state, action) {
@@ -80,5 +80,5 @@ export default {
     post: (...args) => useApi('post', ...args),
     put: (...args) => useApi('put', ...args),
     patch: (...args) => useApi('patch', ...args),
-    delete: (...args) => useApi('delete', ...args),
+    delete: (...args) => useApi('delete', ...args)
 }

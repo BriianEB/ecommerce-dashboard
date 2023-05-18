@@ -1,29 +1,32 @@
-import { Routes, Route } from 'react-router-dom';
-import CustomRoute from 'shared/components/CustomRoute';
+import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import ThemeProvider from './theme';
-
 import Layout from 'shared/components/Layout';
-import ProgressBar from 'shared/components/ProgressBar';
 import Notification from 'shared/components/Notification';
 
 // Rutas
 import Dashboard from 'Dashboard';
-import Orders from 'Orders';
-import Products from 'Products';
+import ordersRoutes from 'Orders/routes';
+import productsRoutes from 'Products/routes';
+
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <Layout />,
+        children: [
+            { index: true, element: <Dashboard /> },
+            ordersRoutes,
+            productsRoutes
+        ]
+    }
+]);
 
 function App() {
     return (
-        <ThemeProvider>
-            <ProgressBar />
+        <ThemeProvider>            
             <Notification />
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<CustomRoute><Dashboard /></CustomRoute>} />
-                    <Route path="orders/*" element={<Orders />} />
-                    <Route path="products/*" element={<Products />} />
-                </Route>
-            </Routes>
+            <RouterProvider router={router} />
         </ThemeProvider>
     );
 }

@@ -1,15 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import { Box, Button, Card, Typography } from '@mui/material';
 
-import useApi from 'shared/hooks/useApi';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import DataTable from 'shared/components/Table/DataTable';
 import TableFilter from 'shared/components/Table/TableFilter';
 import TableExport from 'shared/components/Table/TableExport';
 import TableSearch from 'shared/components/Table/TableSearch';
-
-import { finishProgress } from 'store/progressBarSlice';
 
 import AddIcon from '@mui/icons-material/Add';
 
@@ -28,28 +25,12 @@ const columns = [
 
 
 function ViewOrders() {
+    const orders = useLoaderData();
+
     const [filter, setFilter] = useState();
-
-    const dispatch = useDispatch();
-
-    const [getOrders, reqStatus, orders, reqErrors] = useApi.get('/orders');
-
-    useEffect(function () {
-        getOrders();
-    }, [getOrders]);
-
-    useEffect(function () {
-        if (reqStatus === 'completed') {
-            dispatch(finishProgress());
-        }
-    }, [dispatch, reqStatus]);
 
     function handleSearch(term) {
         setFilter(term);
-    }
-
-    if (reqStatus !== 'completed') {
-        return null;
     }
 
     return (

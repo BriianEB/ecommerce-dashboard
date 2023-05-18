@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 
-import SideNav from './SideNav';
 import Header from './Header';
+import ProgressBar from 'shared/components/ProgressBar';
+import SideNav from './SideNav';
 
 
 function Layout() {
@@ -25,6 +26,7 @@ function Layout() {
                 minHeight: '100%'
             }}
         >
+            <ProgressBar />
             <Box sx={{ml: '260px'}}>
                 <Header onOpenSideNav={handleOpenSideNav} />
             </Box>

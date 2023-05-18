@@ -1,16 +1,16 @@
-import { useSelector } from 'react-redux';
+import { useNavigation } from 'react-router-dom';
 import NProgress from 'nprogress';
 import { GlobalStyles } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 
 function ProgressBar() {
-    const { progress } = useSelector((state) => state.progressBar);
+    const navigation = useNavigation();
     const theme = useTheme();
 
-    if (progress) {
+    if (navigation.state === 'loading' || navigation.state === 'submitting') {
         NProgress.start();
-    } else {
+    } else if (navigation.state === 'idle') {
         NProgress.done();
     }
 

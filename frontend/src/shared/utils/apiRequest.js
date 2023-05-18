@@ -25,3 +25,11 @@ function apiRequest(method, endpoint, data, params) {
 }
 
 export default apiRequest;
+
+export const api = {
+    get: (...args) => apiRequest('get', ...args),
+    post: (...args) => apiRequest('post', ...args),
+    put: (...args) => apiRequest('put', ...args),
+    patch: (...args) => apiRequest('patch', ...args),
+    delete: (...args) => apiRequest('delete', ...args)
+};

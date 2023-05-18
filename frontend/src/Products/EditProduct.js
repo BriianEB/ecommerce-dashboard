@@ -1,46 +1,38 @@
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useActionData, useLoaderData, useNavigate, useSubmit } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Box, Card, Typography } from '@mui/material';
 
-import useApi from 'shared/hooks/useApi';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import ProductForm from './ProductForm';
 
+import { notifySuccess } from 'store/notificationSlice';
+
+import { api } from 'shared/utils/apiRequest';
+
 
 function EditProduct() {
+    const product = useLoaderData();
+    const action = useActionData();
+
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const params = useParams();
-    const productId = params.id;
-    
-    const [getProduct, getStatus, product, getErrors] = useApi.get(`/products/${productId}`);
-    // eslint-disable-next-line
-    const [patchProduct, patchStatus, updatedProduct, patchErrors] = useApi.patch(`/products/${productId}`);
+    const submit = useSubmit();
 
     useEffect(function () {
-        getProduct();
-    }, [getProduct]);
-
-    useEffect(function () {
-        if (patchStatus === 'completed') {
+        if (action?.state === 'success') {
+            dispatch(notifySuccess('Product updated succesfully'));
             navigate('/products');
         }
-    }, [patchStatus, navigate]);
-
-    if (getErrors) {
-        console.log(getErrors);
-    }
-
-    if (patchErrors) {
-        console.log(patchErrors);
-    }
+    }, [action, dispatch, navigate]);
 
     function handleSubmit(data) {
-        patchProduct(data);
-    }
-
-    if (getStatus !== 'completed') {
-        return null;
-    }
+        let formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('price', data.price);
+        
+        submit(formData, { method: 'patch' });
+    }    
     
     return (
         <Box>
@@ -78,6 +70,23 @@ function EditProduct() {
             </Box>
         </Box>
     );
+}
+
+export function loader({ params }) {
+    return api.get(`/products/${params.id}`);
+}
+
+export async function action({ request, params }) {            
+    const formData = await request.formData();
+
+    await api.patch(`/products/${params.id}`, {
+        name: formData.get('name'),
+        price: formData.get('price')
+    });
+    
+    return {
+        state: 'success'
+    };
 }
 
 export default EditProduct;
