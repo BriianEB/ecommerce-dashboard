@@ -1,23 +1,23 @@
 import { Avatar, Box, IconButton, Stack } from '@mui/material';
-import { alpha } from '@mui/material/styles';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
+
+import ThemeModeToggler from './ThemeModeToggler';
 
 
 function Header({ onOpenSideNav }) {
     return (
         <Box
             sx={{
-                bgcolor: (theme) => theme.palette.grey[0],
+                bgcolor: (theme) => theme.palette.background.paper,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 height: '70px',
                 pl: 2,
                 pr: 2,
-                boxShadow: (theme) => `0 0 25px 0 ${alpha(theme.palette.grey[500], 0.15)}`
+                boxShadow: (theme) => theme.customShadows.card
             }}
         >
             <Box>
@@ -32,7 +32,7 @@ function Header({ onOpenSideNav }) {
             </Box>           
             
             <Stack direction="row" alignItems="center" spacing={1.5}>
-                <IconButton><DarkModeIcon /></IconButton>
+                <ThemeModeToggler />
                 <IconButton><NotificationsIcon /></IconButton>
                 <IconButton
                     sx={{

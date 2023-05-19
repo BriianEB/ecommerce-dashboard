@@ -14,7 +14,7 @@ const MuiTable = {
     MuiTableCell: {
         styleOverrides: {
             head: ({ theme }) => ({
-                backgroundColor: theme.palette.grey[250],
+                backgroundColor: theme.palette.background.neutral,
                 borderBottom: 'none',
                 '&:first-of-type': {
                     borderTopLeftRadius: theme.shape.borderRadius,

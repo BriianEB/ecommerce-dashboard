@@ -22,7 +22,7 @@ function ProgressBar() {
                     '& .bar': {
                         top: 0,
                         left: 0,
-                        height: 2,
+                        height: 3,
                         width: '100%',
                         position: 'fixed',
                         zIndex: theme.zIndex.snackbar,

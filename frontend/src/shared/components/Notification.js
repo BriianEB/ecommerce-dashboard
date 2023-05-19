@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Alert as MUIAlert, Slide, Snackbar } from '@mui/material';
 
 import { close } from 'store/notificationSlice';
@@ -7,7 +7,7 @@ import { close } from 'store/notificationSlice';
 
 const Alert = forwardRef(function Alert(props, ref) {
     return (
-        <MUIAlert elevation={6} ref={ref} variant="filled" {...props} />
+        <MUIAlert elevation={6} ref={ref} variant="filled" color="primary" {...props} />
     );
 });
 

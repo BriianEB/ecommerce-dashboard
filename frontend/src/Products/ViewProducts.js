@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useActionData, useLoaderData, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useFetcher, useLoaderData, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Box, Button, Card, MenuItem, Typography } from '@mui/material';
 
@@ -8,7 +8,7 @@ import DataTable from 'shared/components/Table/DataTable';
 import TableFilter from 'shared/components/Table/TableFilter';
 import TableExport from 'shared/components/Table/TableExport';
 import TableSearch from 'shared/components/Table/TableSearch';
-import DeleteRowAction from 'shared/components/Table/DeleteRowAction';
+import DeleteDalog from 'shared/components/DeleteDialog';
 
 import { notifySuccess } from 'store/notificationSlice';
 
@@ -16,6 +16,7 @@ import { api } from 'shared/utils/apiRequest';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 const columns = [
@@ -38,24 +39,45 @@ const columns = [
 
 function ViewProducts() {
     const products = useLoaderData();
-    const action = useActionData();
 
     const dispatch = useDispatch();
+    const fetcher = useFetcher(); // Fetcher para la acción de eliminar producto
     const navigate = useNavigate();
 
     const [filter, setFilter] = useState();
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [rowToDelete, setRowToDelete] = useState();
+
+    useEffect(function () {
+        if (fetcher.state === 'idle' && fetcher.data?.state === 'success') {
+            dispatch(notifySuccess('Product deleted successfully'));
+        }
+    }, [fetcher.state, fetcher.data, dispatch]);
 
     function handleSearch(term) {
         setFilter(term);
     }
 
-    function onEditRow(row) {
+    function handleCloseDeleteDialog() {
+        setShowDeleteConfirmation(false);
+    }
+
+    function handleClickEditRow(row) {
         navigate(`${row.id}/edit`);
     }
 
-    function handleDelete(response, row) {        
-        dispatch(notifySuccess('Product deleted succesfully'));
-        //getProducts();
+    function handleClickDeleteRow(row) {
+        setRowToDelete(row);
+        setShowDeleteConfirmation(true);
+    }
+
+    function handleDeleteRow() {
+        setShowDeleteConfirmation(false);
+
+        fetcher.submit(null, {
+            method: 'delete',
+            action: `${rowToDelete.id}/delete`
+        });
     }
 
     return (
@@ -69,12 +91,7 @@ function ViewProducts() {
                 }}
             >
                 <Typography variant="h6">Products</Typography>
-                <Breadcrumbs
-                    links={[
-                        { name: 'Dashboard', path: '/' },
-                        { name: 'Products', path: '/products' }
-                    ]}
-                />
+                <Breadcrumbs />
             </Box>
 
             <Box>
@@ -112,22 +129,25 @@ function ViewProducts() {
                         filter={filter}
                         actions={(row) => (
                             <>
-                                <MenuItem onClick={() => onEditRow(row)}>
+                                <MenuItem onClick={() => handleClickEditRow(row)}>
                                     <EditIcon fontSize="small" />
                                     <Typography variant="body2">Edit</Typography>
                                 </MenuItem>
-                                <DeleteRowAction
-                                    apiUri={`/products/${row.id}`}
-                                    rowName={row.name}
-                                    onDelete={
-                                        (response) => handleDelete(response, row)
-                                    }
-                                />
+                                <MenuItem onClick={() => handleClickDeleteRow(row)}>
+                                    <DeleteIcon fontSize="small" />
+                                    <Typography variant="body2">Delete</Typography>
+                                </MenuItem>
                             </>
                         )}
                     />
                 </Card>
             </Box>
+            <DeleteDalog
+                name={rowToDelete?.name}
+                open={showDeleteConfirmation}
+                onClose={handleCloseDeleteDialog}
+                onDelete={handleDeleteRow}
+            />
         </Box>        
     );
 }

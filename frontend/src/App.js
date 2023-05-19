@@ -15,10 +15,14 @@ const router = createBrowserRouter([
         path: '/',
         element: <Layout />,
         children: [
-            { index: true, element: <Dashboard /> },
+            {
+                index: true,
+                element: <Dashboard />
+            },
             ordersRoutes,
             productsRoutes
-        ]
+        ],
+        handle: {crumb: () => ({ name: 'Dashboard', path: '/' })}
     }
 ]);
 

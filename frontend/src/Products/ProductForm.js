@@ -15,6 +15,10 @@ const validations = {
         required: {
             value: true,
             message: 'This field must be filled'
+        },
+        pattern: {
+            value: /^[\d]+$/,
+            message: 'Must be a numeric value'
         }
     }
 

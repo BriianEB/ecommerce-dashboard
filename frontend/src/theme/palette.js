@@ -24,8 +24,7 @@ const GREY = {
     500_80: alpha('#919EAB', 0.80)
 };
 
-const palette = {
-    mode: 'light',
+const common = {
     primary: {
         light: '#00A9E0',
         main: '#008CBA',
@@ -34,13 +33,7 @@ const palette = {
     secondary: {
         main: GREY[550]
     },
-    menu: {
-        bg: '#2D3340',
-        item: '#838C9E',
-        itemHover: '#B2BBC8'
-    },
     grey: GREY,
-    background: { default: GREY[200], },
     action: {
         hover: GREY[500_8],
         selected: GREY[500_16],
@@ -50,6 +43,31 @@ const palette = {
         hoverOpacity: 0.08,
         disabledOpacity: 0.48
     }
+};
+
+const palette = {
+    light: {
+        ...common,
+        mode: 'light',
+        menu: {
+            bg: '#2D3340',
+            item: '#838C9E',
+            itemHover: '#B2BBC8'
+        },
+        text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
+        background: { paper: '#FFFFFF', default: GREY[200], neutral: GREY[250] },
+    },
+    dark: {
+        ...common,
+        mode: 'dark',
+        menu: {
+            bg: '#2D3340',
+            item: '#838C9E',
+            itemHover: '#B2BBC8'
+        },
+        text: { primary: '#FFFFFF', secondary: GREY[500], disabled: GREY[600] },
+        background: { paper: '#2D3340', default: '#21252B', neutral: GREY[500_16] },
+    },
 }
 
 export default palette;

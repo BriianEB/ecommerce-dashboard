@@ -7,6 +7,7 @@ import MuiListItemButton from './ListItemButton';
 import MuiListItemIcon from './ListItemIcon';
 import MuiPopover from './Popover';
 import MuiTable from './Table';
+import MuiTypography from './Typography';
 
 
 const components = {
@@ -18,7 +19,8 @@ const components = {
     MuiListItemButton,
     MuiListItemIcon,
     MuiPopover,
-    ...MuiTable
+    ...MuiTable,
+    MuiTypography
 }
 
 export default components;

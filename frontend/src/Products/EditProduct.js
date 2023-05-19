@@ -27,7 +27,7 @@ function EditProduct() {
     }, [action, dispatch, navigate]);
 
     function handleSubmit(data) {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('name', data.name);
         formData.append('price', data.price);
         

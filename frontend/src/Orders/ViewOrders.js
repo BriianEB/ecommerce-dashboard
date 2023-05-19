@@ -44,12 +44,7 @@ function ViewOrders() {
                 }}
             >
                 <Typography variant="h6">Orders</Typography>
-                <Breadcrumbs
-                    links={[
-                        { name: 'Dashboard', path: '/' },
-                        { name: 'Orders', path: '/orders' }
-                    ]}
-                />
+                <Breadcrumbs />
             </Box>
 
             <Box>
@@ -64,7 +59,7 @@ function ViewOrders() {
                     >
                         <Box>
                             <Button variant="contained" startIcon={<AddIcon />}>
-                            <Typography variant="body">Add Order</Typography>
+                                Add Order
                             </Button>
                         </Box>
                         <Box sx={{ width: '300px' }}>

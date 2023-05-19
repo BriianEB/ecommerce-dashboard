@@ -1,7 +1,6 @@
 import { Typography, Button } from "@mui/material";
 
-
-function Dashboard() {
+function Dashboard() {    
     return (
         <>
             <Typography>hi</Typography>
