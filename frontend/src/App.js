@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import ThemeProvider from './theme';
@@ -22,7 +23,10 @@ const router = createBrowserRouter([
             ordersRoutes,
             productsRoutes
         ],
-        handle: {crumb: () => ({ name: 'Dashboard', path: '/' })}
+        handle: {crumb: () => ({
+            name: i18n.t('dashboard.label'),
+            path: '/'
+        })}
     }
 ]);
 

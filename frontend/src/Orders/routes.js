@@ -1,7 +1,9 @@
-import { api } from 'shared/utils/apiRequest';
+import i18n from 'i18next';
 
 import ViewOrders from "./ViewOrders";
 import CreateOrder from "./CreateOrder";
+
+import { api } from 'shared/utils/apiRequest';
 
 
 const routes = {
@@ -17,7 +19,10 @@ const routes = {
             element: <CreateOrder />
         }
     ],
-    handle: {crumb: () => ({ name: 'Orders', path: '/orders' })}
+    handle: {crumb: () => ({
+        name: i18n.t('orders.label'),
+        path: '/orders'
+    })}
 };
 
 export default routes;

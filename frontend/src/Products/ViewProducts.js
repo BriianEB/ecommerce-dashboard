@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useFetcher, useLoaderData, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from "react-i18next";
 import { Box, Button, Card, MenuItem, Typography } from '@mui/material';
 
+import useDeepMemo from 'shared/hooks/useDeepMemo';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import DataTable from 'shared/components/Table/DataTable';
 import TableFilter from 'shared/components/Table/TableFilter';
@@ -19,40 +21,42 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-const columns = [
-    {
-        id: 'id',
-        numeric: false,
-        label: 'ID',
-    },
-    {
-      id: 'name',
-      numeric: false,
-      label: 'Name',
-    },
-    {
-      id: 'price',
-      numeric: true,
-      label: 'Price',
-    }
-];
-
 function ViewProducts() {
-    const products = useLoaderData();
-
     const dispatch = useDispatch();
     const fetcher = useFetcher(); // Fetcher para la acción de eliminar producto
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
+    const products = useLoaderData();
     const [filter, setFilter] = useState();
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [rowToDelete, setRowToDelete] = useState();
 
+    const columns = useDeepMemo([
+        {
+            id: 'id',
+            numeric: false,
+            label: t('products.product.id')
+        },
+        {
+            id: 'name',
+            numeric: false,
+            label: t('products.product.name')
+        },
+        {
+            id: 'price',
+            numeric: true,
+            label: t('products.product.price')
+        }
+    ]);
+
     useEffect(function () {
         if (fetcher.state === 'idle' && fetcher.data?.state === 'success') {
-            dispatch(notifySuccess('Product deleted successfully'));
+            dispatch(notifySuccess(
+                `${t('products.product.product')} ${t('actions.deleteSuccess')}`
+            ));
         }
-    }, [fetcher.state, fetcher.data, dispatch]);
+    }, [fetcher.state, fetcher.data, dispatch, t]);
 
     function handleSearch(term) {
         setFilter(term);
@@ -90,7 +94,7 @@ function ViewProducts() {
                     my: 3
                 }}
             >
-                <Typography variant="h6">Products</Typography>
+                <Typography variant="h6">{t('products.label')}</Typography>
                 <Breadcrumbs />
             </Box>
 
@@ -106,15 +110,17 @@ function ViewProducts() {
                     >
                         <Box>
                             <Button variant="contained" startIcon={<AddIcon />} href="create">
-                                <Typography variant="body">Add Product</Typography>
+                                <Typography variant="body">
+                                    {`${t('actions.add')} ${t('products.product.product')}`}
+                                </Typography>
                             </Button>
                         </Box>
                         <Box sx={{ width: '300px' }}>
                             <TableSearch
-                                fields={[
-                                    'name',
-                                    'price'
-                                ]}
+                                fields={columns.map((column) => ({
+                                    key: column.id,
+                                    label: column.label
+                                }))}
                                 onSelect={handleSearch}
                             />
                             <Box sx={{ px: 1, py: 2 }}>
@@ -127,15 +133,31 @@ function ViewProducts() {
                         columns={columns}
                         rows={products}
                         filter={filter}
-                        actions={(row) => (
+                        actions={(row, closeActions) => (
                             <>
-                                <MenuItem onClick={() => handleClickEditRow(row)}>
+                                <MenuItem
+                                    onClick={function () {
+                                        closeActions();
+
+                                        return handleClickEditRow(row);
+                                    }}
+                                >
                                     <EditIcon fontSize="small" />
-                                    <Typography variant="body2">Edit</Typography>
+                                    <Typography variant="body2">
+                                        {t('actions.edit')}
+                                    </Typography>
                                 </MenuItem>
-                                <MenuItem onClick={() => handleClickDeleteRow(row)}>
+                                <MenuItem
+                                    onClick={function () {
+                                        closeActions();
+
+                                        return handleClickDeleteRow(row);
+                                    }}
+                                >
                                     <DeleteIcon fontSize="small" />
-                                    <Typography variant="body2">Delete</Typography>
+                                    <Typography variant="body2">
+                                        {t('actions.delete')}
+                                    </Typography>
                                 </MenuItem>
                             </>
                         )}

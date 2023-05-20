@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 import { Box, Button, Card, Typography } from '@mui/material';
 
+import useDeepMemo from 'shared/hooks/useDeepMemo';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import DataTable from 'shared/components/Table/DataTable';
 import TableFilter from 'shared/components/Table/TableFilter';
@@ -10,24 +12,26 @@ import TableSearch from 'shared/components/Table/TableSearch';
 
 import AddIcon from '@mui/icons-material/Add';
 
-const columns = [
-    {
-        id: 'id',
-        numeric: false,
-        label: 'ID',
-    },
-    {
-        id: 'total',
-        numeric: true,
-        label: 'Total'
-    }
-];
-
 
 function ViewOrders() {
+    const { t } = useTranslation();
+
     const orders = useLoaderData();
 
     const [filter, setFilter] = useState();
+
+    const columns = useDeepMemo([
+        {
+            id: 'id',
+            numeric: false,
+            label: t('orders.order.id'),
+        },
+        {
+            id: 'total',
+            numeric: true,
+            label: t('orders.order.total')
+        }
+    ]);
 
     function handleSearch(term) {
         setFilter(term);
@@ -43,7 +47,7 @@ function ViewOrders() {
                     my: 3
                 }}
             >
-                <Typography variant="h6">Orders</Typography>
+                <Typography variant="h6">{t('orders.label')}</Typography>
                 <Breadcrumbs />
             </Box>
 
@@ -59,16 +63,15 @@ function ViewOrders() {
                     >
                         <Box>
                             <Button variant="contained" startIcon={<AddIcon />}>
-                                Add Order
+                                {`${t('actions.add')} ${t('orders.order.order')}`}
                             </Button>
                         </Box>
                         <Box sx={{ width: '300px' }}>
                             <TableSearch
-                                fields={[
-                                    'name',
-                                    'calories',
-                                    'fat'
-                                ]}
+                                fields={columns.map((column) => ({
+                                    key: column.id,
+                                    label: column.label
+                                }))}
                                 onSelect={handleSearch}
                             />
                             <Box sx={{ px: 1, py: 2 }}>

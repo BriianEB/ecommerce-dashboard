@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from "react-i18next";
 import { Box, Card, Fade, InputAdornment, InputBase, MenuItem, Popper, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 
@@ -6,10 +7,12 @@ import SearchIcon from '@mui/icons-material/Search';
 
 
 function TableSearch({ fields, onSelect }) {    
-    const inputRef = useRef(null);
-
+    const { t } = useTranslation();
+    
     const [anchorEl, setAnchorEl] = useState(null);
     const [term, setTerm] = useState(null);
+    
+    const inputRef = useRef(null);
 
     const open = Boolean(anchorEl);
 
@@ -49,7 +52,7 @@ function TableSearch({ fields, onSelect }) {
             <InputBase
                 ref={inputRef}
                 fullWidth
-                placeholder="Search"            
+                placeholder={t('table.search')}            
                 startAdornment={(
                     <InputAdornment position="start">
                         <SearchIcon fontSize="small" />
@@ -74,6 +77,7 @@ function TableSearch({ fields, onSelect }) {
                         <Card
                             sx={{
                                 minWidth: '160px',
+                                mt: 1,
                                 p: 1,
                                 '& .MuiMenuItem-root': {
                                     p: 1
@@ -85,16 +89,16 @@ function TableSearch({ fields, onSelect }) {
                             }}
                         >
                             {fields.map((option) => (
-                                <MenuItem key={option} onClick={() => selectOption(option)}>
+                                <MenuItem key={option.key} onClick={() => selectOption(option.key)}>
                                     <Typography variant="body2">
-                                        Search&nbsp;
+                                        {t('table.search')}&nbsp;
                                         <Box
                                             component="span"
                                             sx={{ fontStyle: 'italic' }}
                                         >
-                                            {option}
+                                            {option.label}
                                         </Box>
-                                            &nbsp;with value&nbsp;
+                                            &nbsp;{t('table.withValue')}&nbsp;
                                         <Box
                                             component="span"
                                             sx={{ color: 'secondary.main' }}

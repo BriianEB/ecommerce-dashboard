@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from "react-i18next";
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -60,8 +61,6 @@ function stableSort(array, comparator) {
  * filter: Para filtrar los registros mostrados en la tabla en base a
  * un término (ej: un nombre, una fecha). Ideal para integrar una barra 
  * de búsqueda u opciones de filtros pre-establecidos y/o personalizados.
- * Es un objeto con dos parámetros: 1) field: la columna a filtrar;
- * 2) value: el valor por el qué filtrar.
  * 
  * actions: Acciones a realizar sobre el registro. Se muestran en un 
  * popover de opciones en la última columna de la fila. Lo más común es
@@ -71,6 +70,8 @@ function stableSort(array, comparator) {
  * la fila puedan ser controladas desde fuera de la tabla.
  */
 function DataTable({ columns, rows, filter, actions }) {
+    const { t } = useTranslation();
+
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState(null);
     const [selected, setSelected] = useState([]);
@@ -136,10 +137,14 @@ function DataTable({ columns, rows, filter, actions }) {
 
         const rowsPage = page - 1;
         const start = rowsPage * rowsPerPage + 1;
-        var end = rowsPage * rowsPerPage + rowsPerPage;
+        let end = rowsPage * rowsPerPage + rowsPerPage;
         end = (end > currentRowsLength) ? currentRowsLength : end;
         
-        return `Showing results ${start} to ${end} of ${currentRowsLength}`
+        return t('table.results', {
+            start: start,
+            end: end,
+            total: currentRowsLength
+        });
     }
   
     function isSelected(name) {

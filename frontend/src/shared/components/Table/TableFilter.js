@@ -1,9 +1,12 @@
+import { useTranslation } from "react-i18next";
 import { Button } from '@mui/material';
 
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 
 function TableFilter() {
+    const { t } = useTranslation();
+
     return (
         <Button
             color="secondary"
@@ -12,7 +15,7 @@ function TableFilter() {
             startIcon={<FilterAltIcon />}   
             sx={{ mr: 1.5 }}                                 
         >
-            Filter
+            {t('table.filter')}
         </Button>
     );
 }

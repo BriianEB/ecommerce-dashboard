@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from "react-i18next";
 import { Box, Input, Typography } from '@mui/material';
 
 
 function TableRowsPerPage({ rowsCount, onChange, defaultValue }) {
+    const { t } = useTranslation();
+
     const [input, setInput] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(defaultValue);
 
@@ -61,7 +64,7 @@ function TableRowsPerPage({ rowsCount, onChange, defaultValue }) {
             }}
         >
         <Typography variant="body2" sx={{ mr: 1 }}>
-            Rows per page:
+            {t('table.rowsPage')}
         </Typography>
         {input ? (
             <Input

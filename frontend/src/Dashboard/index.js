@@ -1,12 +1,13 @@
-import { Typography, Button } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { Typography } from "@mui/material";
 
-function Dashboard() {    
+
+function Dashboard() {
+    const { t } = useTranslation();
+    
     return (
         <>
-            <Typography>hi</Typography>
-            <Button variant="contained" sx={{bgColor: 'primary.light'}}>hi</Button>
-            <Button variant="contained" sx={{bgColor: 'primary.main'}}>hi</Button>
-            <Button variant="contained" sx={{bgColor: 'primary.dark'}}>hi</Button>
+            <Typography>{t('dashboard.greeting')}</Typography>            
         </>
     );
 }

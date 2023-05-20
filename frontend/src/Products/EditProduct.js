@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useActionData, useLoaderData, useNavigate, useSubmit } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from "react-i18next";
 import { Box, Card, Typography } from '@mui/material';
 
 import Breadcrumbs from 'shared/components/Breadcrumbs';
@@ -12,19 +13,22 @@ import { api } from 'shared/utils/apiRequest';
 
 
 function EditProduct() {
-    const product = useLoaderData();
-    const action = useActionData();
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const submit = useSubmit();
+    const { t } = useTranslation();
+    
+    const product = useLoaderData();
+    const action = useActionData();    
 
     useEffect(function () {
         if (action?.state === 'success') {
-            dispatch(notifySuccess('Product updated succesfully'));
+            dispatch(notifySuccess(
+                `${t('products.product.product')} ${t('actions.editSuccess')}`
+            ));
             navigate('/products');
         }
-    }, [action, dispatch, navigate]);
+    }, [action, dispatch, navigate, t]);
 
     function handleSubmit(data) {
         const formData = new FormData();
@@ -44,14 +48,10 @@ function EditProduct() {
                     my: 3
                 }}
             >
-                <Typography variant="h6">Edit Product</Typography>
-                <Breadcrumbs
-                    links={[
-                        { name: 'Dashboard', path: '/' },
-                        { name: 'Products', path: '/products' },
-                        { name: 'Edit Product', path: `/products/${product.id}/edit` }
-                    ]}
-                />
+                <Typography variant="h6">
+                    {`${t('actions.edit')} ${t('products.product.product')}`}
+                </Typography>
+                <Breadcrumbs />
             </Box>
             <Box
                 sx={{

@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import ThemeModeToggler from './ThemeModeToggler';
+import Language from './Language';
 
 
 function Header({ onOpenSideNav }) {
@@ -32,6 +33,7 @@ function Header({ onOpenSideNav }) {
             </Box>           
             
             <Stack direction="row" alignItems="center" spacing={1.5}>
+                <Language />
                 <ThemeModeToggler />
                 <IconButton><NotificationsIcon /></IconButton>
                 <IconButton

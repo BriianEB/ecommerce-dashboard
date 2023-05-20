@@ -42,7 +42,7 @@ function TableMoreMenu({ row, actions }) {
                     }
                 }}
             >
-                {actions(row)}
+                {actions(row, handleClose)}
             </Popover>
         </>
     );

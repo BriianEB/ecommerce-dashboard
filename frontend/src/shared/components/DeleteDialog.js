@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import {
     Button,
     Dialog,
@@ -9,11 +11,13 @@ import {
 
 
 function DeleteDialog({ name, open, onClose, onDelete }) {
+    const { t } = useTranslation();
+
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure to delete {name}?
+                    {t('actions.deleteConfirmation', { name: name })}
                 </DialogContentText>
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
@@ -22,14 +26,14 @@ function DeleteDialog({ name, open, onClose, onDelete }) {
                     variant="contained"
                     onClick={onClose}
                 >
-                    <Typography variant="body">Cancel</Typography>
+                    <Typography variant="body">{t('actions.cancel')}</Typography>
                 </Button>
                 <Button
                     variant="contained"
                     color="error"
                     onClick={onDelete}
                 >
-                    <Typography variant="body">Delete</Typography>
+                    <Typography variant="body">{t('actions.delete')}</Typography>
                 </Button>
             </DialogActions>
         </Dialog>

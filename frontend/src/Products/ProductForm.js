@@ -1,6 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
-
+import { useTranslation } from "react-i18next";
 import { Button, Box, Typography } from '@mui/material';
+
 import SmallTextField from 'shared/components/SmallTextField';
 
 
@@ -25,6 +26,8 @@ const validations = {
 };
 
 function ProductForm({ onSubmit, product }) {
+    const { t } = useTranslation();
+
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             name: product ? product.name : '',
@@ -41,7 +44,7 @@ function ProductForm({ onSubmit, product }) {
                     rules={validations.name}
                     render={({ field }) => (
                         <SmallTextField
-                            label="Name"
+                            label={t('products.product.name')}
                             fullWidth
                             sx={{
                                 mb: 3
@@ -59,7 +62,7 @@ function ProductForm({ onSubmit, product }) {
                     rules={validations.price}
                     render={({ field }) => (
                         <SmallTextField
-                            label="Price"
+                            label={t('products.product.price')}
                             fullWidth
                             {...field}
                             error={errors.price !== undefined}
@@ -83,10 +86,10 @@ function ProductForm({ onSubmit, product }) {
                     }}
                     href=".."
                 >
-                    <Typography variant="body">Cancel</Typography>
+                    <Typography variant="body">{t('actions.cancel')}</Typography>
                 </Button>
                 <Button type="submit" variant="contained">
-                    <Typography variant="body">Save</Typography>
+                    <Typography variant="body">{t('actions.save')}</Typography>
                 </Button>
             </Box>
         </form>

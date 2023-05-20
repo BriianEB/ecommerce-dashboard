@@ -1,5 +1,7 @@
 import { Box, Drawer, List } from '@mui/material';
+import { useTranslation } from "react-i18next";
 
+import useDeepMemo from 'shared/hooks/useDeepMemo';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -8,14 +10,16 @@ import logo from 'assets/images/logo.png';
 import NavItem from './NavItem';
 
 
-const items = [
-    { path: '/', name: 'Dashboard', icon: DashboardIcon },
-    { path: 'orders', name: 'Orders', icon: ContentPasteIcon },
-    { path: 'products', name: 'Products', icon: ShoppingBagIcon }
-
-];
-
 function SideNav({ isOpen, onCloseSideNav }) {
+    const { t } = useTranslation();
+
+    const items = useDeepMemo([
+        { path: '/', name: t('dashboard.label'), icon: DashboardIcon },
+        { path: 'orders', name: t('orders.label'), icon: ContentPasteIcon },
+        { path: 'products', name: t('products.label'), icon: ShoppingBagIcon }
+    
+    ]);
+
     return (
         <Drawer
             variant="persistent"

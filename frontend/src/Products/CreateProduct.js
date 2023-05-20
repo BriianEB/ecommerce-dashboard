@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useActionData, useNavigate, useSubmit } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 import { useDispatch } from 'react-redux';
 import { Box, Card, Typography } from '@mui/material';
 
@@ -10,19 +11,23 @@ import { notifySuccess } from 'store/notificationSlice';
 import { api } from 'shared/utils/apiRequest';
 
 
-function CreateProduct() {
-    const action = useActionData();
-
+function CreateProduct() {    
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const submit = useSubmit();
 
+    const action = useActionData();
+
     useEffect(function () {
         if (action?.state === 'success') {
-            dispatch(notifySuccess('Product created successfully'));
+            dispatch(notifySuccess(
+                `${t('products.product.product')} ${t('actions.createSuccess')}`
+            ));
+            
             navigate('/products');
         }   
-    }, [action, dispatch, navigate]);
+    }, [action, dispatch, navigate, t]);
 
     function handleSubmit(data) {
         const formData = new FormData();
@@ -42,14 +47,10 @@ function CreateProduct() {
                     my: 3
                 }}
             >
-                <Typography variant="h6">Create Product</Typography>
-                <Breadcrumbs
-                    links={[
-                        { name: 'Dashboard', path: '/' },
-                        { name: 'Products', path: '/products' },
-                        { name: 'Create Product', path: '/products/create' }
-                    ]}
-                />
+                <Typography variant="h6">
+                    {`${t('actions.create')} ${t('products.product.product')}`}
+                </Typography>
+                <Breadcrumbs />
             </Box>
             <Box
                 sx={{
