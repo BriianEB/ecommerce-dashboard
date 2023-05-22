@@ -8,7 +8,7 @@ import EditProduct, {
     action as editProductAction
 } from './EditProduct';
 
-import { api } from 'shared/utils/apiRequest';
+import { action as deleteProductAction } from './DeleteProduct';
 
 
 const routes = {
@@ -47,14 +47,6 @@ const routes = {
         name: i18n.t('products.label'),
         path: '/products'
     })}
-}
-
-async function deleteProductAction({ params }) {
-    await api.delete(`/products/${params.id}`);
-
-    return {
-        state: 'success'
-    }
 }
 
 export default routes;

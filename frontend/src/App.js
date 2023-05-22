@@ -6,15 +6,18 @@ import Layout from 'shared/components/Layout';
 import Notification from 'shared/components/Notification';
 
 // Rutas
+import authRoutes from 'Auth/routes';
 import Dashboard from 'Dashboard';
 import ordersRoutes from 'Orders/routes';
 import productsRoutes from 'Products/routes';
+import Error from 'shared/components/Error';
 
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <Layout />,
+        errorElement: <Error />,
         children: [
             {
                 index: true,
@@ -27,7 +30,8 @@ const router = createBrowserRouter([
             name: i18n.t('dashboard.label'),
             path: '/'
         })}
-    }
+    },
+    authRoutes
 ]);
 
 function App() {

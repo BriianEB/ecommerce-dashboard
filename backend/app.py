@@ -13,6 +13,7 @@ from models import User, Order, OrderLine, Product
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+cors = CORS()
 migrate = Migrate()
 
 def create_app(config_name):
@@ -20,7 +21,7 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
 
     db.init_app(app)
-    cors = CORS(app, resources={r'*': {'origins': '*'}})
+    cors.init_app(app)
     migrate.init_app(app, db, directory=os.path.join(basedir, 'database/migrations'))
 
     app.register_blueprint(auth)

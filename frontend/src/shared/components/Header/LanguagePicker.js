@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ButtonBase, MenuItem, Popover, Typography } from '@mui/material';
 
-import { resources as lngs } from 'shared/i18n';
+import { resources as lngs } from 'i18n';
 
 import mexico from 'assets/images/mexico.png';
 import usa from 'assets/images/usa.png';
@@ -13,7 +13,7 @@ const flags = {
 }
 
 
-function Language() {
+function LanguagePicker() {
     const { i18n } = useTranslation();
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -87,9 +87,9 @@ function Language() {
                         </Typography>
                     </MenuItem>
                 ))}
-            </Popover>            
+            </Popover>
         </>
     );
 }
 
-export default Language;
+export default LanguagePicker;

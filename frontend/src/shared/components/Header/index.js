@@ -4,7 +4,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import ThemeModeToggler from './ThemeModeToggler';
-import Language from './Language';
+import LanguagePicker from './LanguagePicker';
+import MyAccount from './MyAccount';
 
 
 function Header({ onOpenSideNav }) {
@@ -33,18 +34,10 @@ function Header({ onOpenSideNav }) {
             </Box>           
             
             <Stack direction="row" alignItems="center" spacing={1.5}>
-                <Language />
+                <LanguagePicker />
                 <ThemeModeToggler />
                 <IconButton><NotificationsIcon /></IconButton>
-                <IconButton
-                    sx={{
-                        '&:hover': {
-                            backgroundColor: 'transparent'
-                        }
-                    }}
-                >
-                    <Avatar sx={{bgcolor: 'primary.main'}}>B</Avatar>
-                </IconButton>
+                <MyAccount />
             </Stack>
         </Box>
     );

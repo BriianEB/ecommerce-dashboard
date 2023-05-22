@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigation } from 'react-router-dom';
 import NProgress from 'nprogress';
 import { GlobalStyles } from '@mui/material';
@@ -8,11 +9,15 @@ function ProgressBar() {
     const navigation = useNavigation();
     const theme = useTheme();
 
-    if (navigation.state === 'loading' || navigation.state === 'submitting') {
-        NProgress.start();
-    } else if (navigation.state === 'idle') {
-        NProgress.done();
-    }
+    useEffect(function () {
+        console.log('navigation: ', navigation.state);
+
+        if (navigation.state === 'loading' || navigation.state === 'submitting') {
+            NProgress.start();
+        } else if (navigation.state === 'idle') {
+            NProgress.done();
+        }
+    }, [navigation.state]);
 
     return (
         <GlobalStyles

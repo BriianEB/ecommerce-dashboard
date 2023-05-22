@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 
+import AuthGuard from './AuthGuard';
 import Header from './Header';
 import ProgressBar from 'shared/components/ProgressBar';
 import SideNav from './SideNav';
@@ -20,29 +21,31 @@ function Layout() {
     }
 
     return (
-        <Box
-            sx={{
-                position: 'relative',
-                minHeight: '100%'
-            }}
-        >
+        <AuthGuard>
             <ProgressBar />
-            <Box sx={{ml: '260px'}}>
-                <Header onOpenSideNav={handleOpenSideNav} />
-            </Box>
-            <SideNav isOpen={openSideNav} onCloseSideNav={handleCloseSideNav} />
-            
             <Box
-                component="main"
                 sx={{
-                    ml: '260px'
+                    position: 'relative',
+                    minHeight: '100%'
                 }}
-            >
-                <Container maxWidth="false" sx={{ pb: 3 }}>
-                    <Outlet />
-                </Container>
+            >            
+                <Box sx={{ml: '260px'}}>
+                    <Header onOpenSideNav={handleOpenSideNav} />
+                </Box>
+                <SideNav isOpen={openSideNav} onCloseSideNav={handleCloseSideNav} />
+                
+                <Box
+                    component="main"
+                    sx={{
+                        ml: '260px'
+                    }}
+                >
+                    <Container maxWidth="false" sx={{ pb: 3 }}>
+                        <Outlet />
+                    </Container>
+                </Box>
             </Box>
-        </Box>
+        </AuthGuard>        
     );
 }
 

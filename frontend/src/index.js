@@ -10,7 +10,7 @@ import '@fontsource/roboto/700.css';
 
 import App from './App';
 import store from './store';
-import './shared/i18n';
+import './i18n';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
