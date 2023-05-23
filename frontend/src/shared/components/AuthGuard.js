@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
@@ -13,9 +13,11 @@ function AuthGuard({ children }) {
     const location = useLocation();
     const navigate = useNavigate();
     const { isAuthenticated, expiration } = useAuth();
+    const path = location.pathname;
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(function () {
-        if (!isAuthenticated) {
+        if (!isAuthenticated) {            
             const refreshToken = getRefreshToken();
 
             if (refreshToken === null) {
@@ -32,10 +34,13 @@ function AuthGuard({ children }) {
         // Cada que se cambia de ruta en la app, revisa que el access token
         // sea válido.
         if (isTokenExpired(expiration)) {
+            setRefreshing(true);
             dispatch(refreshAccessToken());
+        } else {
+            setRefreshing(false);
         }
 
-    }, [location, expiration, isAuthenticated, navigate, dispatch]);
+    }, [path, expiration, isAuthenticated, navigate, dispatch]);
 
     if (!isAuthenticated) {
         // Si el flujo llega a este punto, significa que la página fue recargada
@@ -45,6 +50,10 @@ function AuthGuard({ children }) {
         return (
             <LoadingScreen />
         );
+    }
+
+    if (refreshing) {
+        return <LoadingScreen />;
     }
 
     return (

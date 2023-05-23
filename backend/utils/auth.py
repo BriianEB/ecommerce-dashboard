@@ -7,7 +7,7 @@ from werkzeug.exceptions import Unauthorized
 
 def generate_access_token(data):
     secret = current_app.config['SECRET_KEY']
-    exp_time = datetime.now(tz=timezone.utc) + timedelta(seconds=5)
+    exp_time = datetime.now(tz=timezone.utc) + timedelta(minutes=10)
     payload = { 'exp': exp_time }
     payload.update(data)
 

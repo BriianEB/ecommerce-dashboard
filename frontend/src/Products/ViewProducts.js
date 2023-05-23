@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useFetcher, useLoaderData, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import { Box, Button, Card, MenuItem, Typography } from '@mui/material';
+import { List } from 'react-content-loader';
 
+import useApi from 'shared/hooks/useApi';
 import useDeepMemo from 'shared/hooks/useDeepMemo';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import DataTable from 'shared/components/Table/DataTable';
@@ -11,10 +13,7 @@ import TableFilter from 'shared/components/Table/TableFilter';
 import TableExport from 'shared/components/Table/TableExport';
 import TableSearch from 'shared/components/Table/TableSearch';
 import DeleteDalog from 'shared/components/DeleteDialog';
-
 import { notifySuccess } from 'store/notificationSlice';
-
-import { api } from 'shared/utils/apiRequest';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,40 +22,29 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 function ViewProducts() {
     const dispatch = useDispatch();
-    const fetcher = useFetcher(); // Fetcher para la acción de eliminar producto
     const navigate = useNavigate();
     const { t } = useTranslation();
-
-    const products = useLoaderData();
+    
     const [filter, setFilter] = useState();
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [rowToDelete, setRowToDelete] = useState();
+    const [rowToDelete, setRowToDelete] = useState(null);
 
-    const columns = useDeepMemo([
-        {
-            id: 'id',
-            numeric: false,
-            label: t('products.product.id')
-        },
-        {
-            id: 'name',
-            numeric: false,
-            label: t('products.product.name')
-        },
-        {
-            id: 'price',
-            numeric: true,
-            label: t('products.product.price')
-        }
-    ]);
+    const [getProducts, getStatus, products, getError] = useApi.get('/products');
+    // eslint-disable-next-line
+    const [deleteProduct, deleteStatus, deleteRes, deleteError] = useApi.delete(`/products/${rowToDelete?.id}`);
 
     useEffect(function () {
-        if (fetcher.state === 'idle' && fetcher.data?.state === 'success') {
+        getProducts();
+    }, [getProducts]);
+
+    useEffect(function () {
+        if (deleteStatus === 'completed') {
             dispatch(notifySuccess(
                 `${t('products.product.product')} ${t('actions.deleteSuccess')}`
             ));
+            getProducts();
         }
-    }, [fetcher.state, fetcher.data, dispatch, t]);
+    }, [deleteStatus, getProducts, dispatch, t]);
 
     function handleSearch(term) {
         setFilter(term);
@@ -75,14 +63,32 @@ function ViewProducts() {
         setShowDeleteConfirmation(true);
     }
 
-    function handleDeleteRow() {
+    async function handleDeleteRow() {
         setShowDeleteConfirmation(false);
-
-        fetcher.submit(null, {
-            method: 'delete',
-            action: `${rowToDelete.id}/delete`
-        });
+        deleteProduct();        
     }
+
+    if (getError) {
+        console.log(getError);
+    }
+
+    const columns = useDeepMemo([
+        {
+            id: 'id',
+            numeric: false,
+            label: t('products.product.id')
+        },
+        {
+            id: 'name',
+            numeric: false,
+            label: t('products.product.name')
+        },
+        {
+            id: 'price',
+            numeric: true,
+            label: t('products.product.price')
+        }
+    ]);
 
     return (
         <Box>
@@ -129,39 +135,43 @@ function ViewProducts() {
                             </Box>
                         </Box>
                     </Box>
-                    <DataTable
-                        columns={columns}
-                        rows={products}
-                        filter={filter}
-                        actions={(row, closeActions) => (
-                            <>
-                                <MenuItem
-                                    onClick={function () {
-                                        closeActions();
+                    {(getStatus === 'completed') ? (
+                        <DataTable
+                            columns={columns}
+                            rows={products}
+                            filter={filter}
+                            actions={(row, closeActions) => (
+                                <>
+                                    <MenuItem
+                                        onClick={function () {
+                                            closeActions();
 
-                                        return handleClickEditRow(row);
-                                    }}
-                                >
-                                    <EditIcon fontSize="small" />
-                                    <Typography variant="body2">
-                                        {t('actions.edit')}
-                                    </Typography>
-                                </MenuItem>
-                                <MenuItem
-                                    onClick={function () {
-                                        closeActions();
+                                            return handleClickEditRow(row);
+                                        }}
+                                    >
+                                        <EditIcon fontSize="small" />
+                                        <Typography variant="body2">
+                                            {t('actions.edit')}
+                                        </Typography>
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={function () {
+                                            closeActions();
 
-                                        return handleClickDeleteRow(row);
-                                    }}
-                                >
-                                    <DeleteIcon fontSize="small" />
-                                    <Typography variant="body2">
-                                        {t('actions.delete')}
-                                    </Typography>
-                                </MenuItem>
-                            </>
-                        )}
-                    />
+                                            return handleClickDeleteRow(row);
+                                        }}
+                                    >
+                                        <DeleteIcon fontSize="small" />
+                                        <Typography variant="body2">
+                                            {t('actions.delete')}
+                                        </Typography>
+                                    </MenuItem>
+                                </>
+                            )}
+                        />
+                    ) : (
+                        <List />
+                    )}                    
                 </Card>
             </Box>
             <DeleteDalog
@@ -173,10 +183,5 @@ function ViewProducts() {
         </Box>        
     );
 }
-
-export function loader() {
-    return api.get('/products');
-}
-
 
 export default ViewProducts;

@@ -1,44 +1,29 @@
-import i18n from 'i18next';
-import { createBrowserRouter, RouterProvider} from 'react-router-dom';
+import { Routes, Route} from 'react-router-dom';
 
 import ThemeProvider from './theme';
 import Layout from 'shared/components/Layout';
+
 import Notification from 'shared/components/Notification';
 
 // Rutas
-import authRoutes from 'Auth/routes';
+import Auth from 'Auth';
 import Dashboard from 'Dashboard';
-import ordersRoutes from 'Orders/routes';
-import productsRoutes from 'Products/routes';
-import Error from 'shared/components/Error';
+import Orders from 'Orders';
+import Products from 'Products';
 
-
-const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Layout />,
-        errorElement: <Error />,
-        children: [
-            {
-                index: true,
-                element: <Dashboard />
-            },
-            ordersRoutes,
-            productsRoutes
-        ],
-        handle: {crumb: () => ({
-            name: i18n.t('dashboard.label'),
-            path: '/'
-        })}
-    },
-    authRoutes
-]);
 
 function App() {
     return (
         <ThemeProvider>            
             <Notification />
-            <RouterProvider router={router} />
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="orders/*" element={<Orders />} />
+                    <Route path="products/*" element={<Products />} />
+                </Route>
+                <Route path="/auth/*" element={<Auth />} />
+            </Routes>
         </ThemeProvider>
     );
 }

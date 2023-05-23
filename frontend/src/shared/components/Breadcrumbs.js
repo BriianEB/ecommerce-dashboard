@@ -1,16 +1,10 @@
 import { Box, Breadcrumbs as MUIBreadCrumbs, Link, Typography } from '@mui/material';
 
-import { useMatches } from "react-router-dom";
 
+function Breadcrumbs() {
+    const crumbs = [];
 
-function Breadcrumbs() {    
-    const matches = useMatches();
-    
-    const crumbs = matches
-        .filter((match) => Boolean(match.handle?.crumb))
-        .map((match) => match.handle.crumb(match.data));
-
-    const currentCrumb = crumbs[crumbs.length - 1].name;
+    const currentCrumb = '';//crumbs[crumbs.length - 1].name;
 
     return (
         <MUIBreadCrumbs separator={<BreadcrumbsSeparator />} sx={{m:0}}>
@@ -24,7 +18,7 @@ function Breadcrumbs() {
                         <Typography variant="body2">{crumb.name}</Typography>
                     )}
                 </div>
-            ))}                   
+            ))}
         </MUIBreadCrumbs>
     );
 }

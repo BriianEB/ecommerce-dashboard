@@ -1,41 +1,43 @@
 import { useEffect } from 'react';
-import { useActionData, useLoaderData, useNavigate, useSubmit } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import { Box, Card, Typography } from '@mui/material';
+import { List } from 'react-content-loader';
 
+import useApi from 'shared/hooks/useApi';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import ProductForm from './ProductForm';
-
 import { notifySuccess } from 'store/notificationSlice';
-
-import { api } from 'shared/utils/apiRequest';
 
 
 function EditProduct() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const submit = useSubmit();
     const { t } = useTranslation();
+    const params = useParams();
+    const productId = params.id;
     
-    const product = useLoaderData();
-    const action = useActionData();    
+    // eslint-disable-next-line
+    const [getProduct, getStatus, product, getErrors] = useApi.get(`/products/${productId}`);
+    // eslint-disable-next-line
+    const [patchProduct, patchStatus, updatedProduct, patchErrors] = useApi.patch(`/products/${productId}`);
 
     useEffect(function () {
-        if (action?.state === 'success') {
+        getProduct();
+    }, [getProduct]);
+
+    useEffect(function () {
+        if (patchStatus === 'completed') {
             dispatch(notifySuccess(
                 `${t('products.product.product')} ${t('actions.editSuccess')}`
             ));
             navigate('/products');
         }
-    }, [action, dispatch, navigate, t]);
+    }, [patchStatus, navigate, dispatch, t]);
 
     function handleSubmit(data) {
-        const formData = new FormData();
-        formData.append('name', data.name);
-        formData.append('price', data.price);
-        
-        submit(formData, { method: 'patch' });
+        patchProduct(data);
     }    
     
     return (
@@ -65,28 +67,15 @@ function EditProduct() {
                         width: '50%'
                     }}
                 >
-                    <ProductForm onSubmit={handleSubmit} product={product} />
+                    {getStatus === 'completed' ? (
+                        <ProductForm onSubmit={handleSubmit} product={product} />
+                    ) : (
+                        <List />
+                    )}
                 </Card>
             </Box>
         </Box>
     );
-}
-
-export function loader({ params }) {
-    return api.get(`/products/${params.id}`);
-}
-
-export async function action({ request, params }) {            
-    const formData = await request.formData();
-
-    await api.patch(`/products/${params.id}`, {
-        name: formData.get('name'),
-        price: formData.get('price')
-    });
-    
-    return {
-        state: 'success'
-    };
 }
 
 export default EditProduct;

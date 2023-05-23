@@ -1,4 +1,5 @@
 import { useCallback, useReducer } from 'react';
+import { useSelector } from 'react-redux';
 
 import useDeepMemo from './useDeepMemo';
 import apiRequest from 'shared/utils/apiRequest';
@@ -33,6 +34,7 @@ function apiReducer(state, action) {
 }
 
 function useApi(method, endpoint, instanceParams) {
+    const { token } = useSelector((state) => state.auth);
     const memoParams = useDeepMemo(instanceParams);
 
     const [state, dispatch] = useReducer(apiReducer, {
@@ -50,20 +52,24 @@ function useApi(method, endpoint, instanceParams) {
         dispatch({ type: 'SEND' });
 
         const params = callTimeParams ? callTimeParams : memoParams;
+        const headers = token ? {Authorization: `Bearer ${token}`} : {};
 
-        apiRequest(method, endpoint, data, params).then(function (response) {
+        apiRequest(method, endpoint, data, params, headers).then(function (response) {
             dispatch({
                  type: 'SUCCESS',
                  data: response
              });
         }, function (error) {
-            console.log(error);
+            if (error.code === 401) {
+                console.log('unauth');
+            }
+
             dispatch({
                 type: 'ERROR',
                 error: error
             });
         });
-    }, [method, endpoint, memoParams]);
+    }, [method, endpoint, memoParams, token]);
 
     return [
         request,

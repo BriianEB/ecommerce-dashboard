@@ -1,40 +1,36 @@
 import { useEffect } from 'react';
-import { useActionData, useNavigate, useSubmit } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { useDispatch } from 'react-redux';
 import { Box, Card, Typography } from '@mui/material';
 
+import useApi from 'shared/hooks/useApi';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import ProductForm from './ProductForm';
 import { notifySuccess } from 'store/notificationSlice';
 
-import { api } from 'shared/utils/apiRequest';
+
 
 
 function CreateProduct() {    
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const submit = useSubmit();
 
-    const action = useActionData();
+    // eslint-disable-next-line
+    const [createProduct, reqStatus, product, reqErrors] = useApi.post('/products');
 
     useEffect(function () {
-        if (action?.state === 'success') {
+        if (reqStatus === 'completed') {
             dispatch(notifySuccess(
                 `${t('products.product.product')} ${t('actions.createSuccess')}`
             ));
-            
             navigate('/products');
-        }   
-    }, [action, dispatch, navigate, t]);
+        }
+    }, [reqStatus, navigate, dispatch, t]);
 
     function handleSubmit(data) {
-        const formData = new FormData();
-        formData.append('name', data.name);
-        formData.append('price', data.price);
-        
-        submit(formData, { method: 'patch' });
+        createProduct(data);
     }
     
     return (
@@ -69,19 +65,6 @@ function CreateProduct() {
             </Box>
         </Box>
     );
-}
-
-export async function action({ request }) {
-    const formData = await request.formData();
-
-    await api.post('/products', {
-        name: formData.get('name'),
-        price: formData.get('price')
-    });
-
-    return {
-        state: 'success'
-    };
 }
 
 export default CreateProduct;

@@ -2,28 +2,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from "react-i18next";
 import { Button, Box, Typography } from '@mui/material';
 
+import useDeepMemo from 'shared/hooks/useDeepMemo';
 import SmallTextField from 'shared/components/SmallTextField';
 
-
-const validations = {
-    name: {
-        required: {
-            value: true,
-            message: 'This field must be filled'
-        }
-    },
-    price: {
-        required: {
-            value: true,
-            message: 'This field must be filled'
-        },
-        pattern: {
-            value: /^[\d]+$/,
-            message: 'Must be a numeric value'
-        }
-    }
-
-};
 
 function ProductForm({ onSubmit, product }) {
     const { t } = useTranslation();
@@ -33,7 +14,27 @@ function ProductForm({ onSubmit, product }) {
             name: product ? product.name : '',
             price: product ? product.price : ''
         }
-    });    
+    });
+
+    const validations = useDeepMemo({
+        name: {
+            required: {
+                value: true,
+                message: t('validations.required')
+            }
+        },
+        price: {
+            required: {
+                value: true,
+                message: t('validations.required')
+            },
+            pattern: {
+                value: /^[\d]+$/,
+                message: t('validations.numeric')
+            }
+        }
+    
+    });
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

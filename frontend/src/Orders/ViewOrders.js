@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { Box, Button, Card, Typography } from '@mui/material';
+import { List } from 'react-content-loader';
 
 import useDeepMemo from 'shared/hooks/useDeepMemo';
+import useApi from 'shared/hooks/useApi';
 import Breadcrumbs from 'shared/components/Breadcrumbs';
 import DataTable from 'shared/components/Table/DataTable';
 import TableFilter from 'shared/components/Table/TableFilter';
@@ -15,10 +16,21 @@ import AddIcon from '@mui/icons-material/Add';
 
 function ViewOrders() {
     const { t } = useTranslation();
+    const [getOrders, getStatus, orders, getError] = useApi.get('/orders');
+    
+    const [filter, setFilter] = useState();    
 
-    const orders = useLoaderData();
+    useEffect(function () {
+        getOrders();
+    }, [getOrders]);
 
-    const [filter, setFilter] = useState();
+    function handleSearch(term) {
+        setFilter(term);
+    }
+
+    if (getError) {
+        console.log(getError);
+    }
 
     const columns = useDeepMemo([
         {
@@ -32,10 +44,6 @@ function ViewOrders() {
             label: t('orders.order.total')
         }
     ]);
-
-    function handleSearch(term) {
-        setFilter(term);
-    }
 
     return (
         <Box>
@@ -80,11 +88,15 @@ function ViewOrders() {
                             </Box>
                         </Box>
                     </Box>
-                    <DataTable
+                    {getStatus === 'completed' ? (
+                        <DataTable
                         columns={columns}
                         rows={orders}
                         filter={filter}
                     />
+                    ) : (
+                        <List />
+                    )}
                 </Card>
             </Box>
         </Box>        

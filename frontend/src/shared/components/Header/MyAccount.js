@@ -18,7 +18,7 @@ import { removeSession } from 'shared/utils/auth';
 
 function MyAccount() {
     const dispatch = useDispatch();
-    const { i18n } = useTranslation();    
+    const { t } = useTranslation();    
     const { user } = useAuth();
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -50,7 +50,7 @@ function MyAccount() {
                 }}
             >
                 <Avatar sx={{bgcolor: 'primary.main'}}>
-                    {user.email[0].toUpperCase()}
+                    {user?.email[0].toUpperCase()}
                 </Avatar>                
             </IconButton>        
             <Popover
@@ -69,7 +69,7 @@ function MyAccount() {
                     sx={{ px: 2.5, py: 1.5 }}
                 >
                     <Typography sx={{ color: 'text.secondary' }}>
-                        {user.email}
+                        {user?.email}
                     </Typography>
                 </Box>
                 <Divider />
@@ -79,7 +79,7 @@ function MyAccount() {
                         onClick={handleLogout}
                     >
                         <Typography>
-                            {'Logout'}
+                            {t('auth.logout')}
                         </Typography>
                     </MenuItem>
                 </div>

@@ -5,7 +5,6 @@ import { Box, Container } from '@mui/material';
 
 import AuthGuard from './AuthGuard';
 import Header from './Header';
-import ProgressBar from 'shared/components/ProgressBar';
 import SideNav from './SideNav';
 
 
@@ -22,7 +21,6 @@ function Layout() {
 
     return (
         <AuthGuard>
-            <ProgressBar />
             <Box
                 sx={{
                     position: 'relative',
