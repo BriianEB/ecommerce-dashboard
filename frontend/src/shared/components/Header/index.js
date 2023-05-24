@@ -1,4 +1,4 @@
-import { Avatar, Box, IconButton, Stack } from '@mui/material';
+import { Box, IconButton, Stack } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';

@@ -2,7 +2,7 @@ import { Routes, Route} from 'react-router-dom';
 
 import ThemeProvider from './theme';
 import Layout from 'shared/components/Layout';
-
+import NotFound from 'shared/components/Errors/NotFound';
 import Notification from 'shared/components/Notification';
 
 // Rutas
@@ -23,6 +23,7 @@ function App() {
                     <Route path="products/*" element={<Products />} />
                 </Route>
                 <Route path="/auth/*" element={<Auth />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </ThemeProvider>
     );
